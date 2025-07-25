@@ -34,7 +34,7 @@ export default function LoginPage() {
     };
 
     login(dummyUser);
-    router.push(`/dashboard/${user.role}`)
+    router.push(`/dashboard/buyer`)
   };
 
   return (

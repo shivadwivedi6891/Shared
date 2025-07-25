@@ -9,6 +9,7 @@ export default function RegisterPage() {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '', // ✅ Added phone field
     password: '',
     confirmPassword: '',
   });
@@ -19,8 +20,6 @@ export default function RegisterPage() {
       alert('Passwords do not match');
       return;
     }
-
-    window.location.href = '/kyc';
   };
 
   return (
@@ -82,6 +81,21 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* ✅ Phone Number Field */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Phone Number</label>
+              <input
+                type="tel"
+                required
+                maxLength={10}
+                pattern="[0-9]{10}"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter 10-digit phone number"
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-1">Password</label>
               <input
@@ -110,7 +124,7 @@ export default function RegisterPage() {
               type="submit"
               className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md hover:shadow-xl"
             >
-              Create Account
+              <Link href="/otp"> Create Account</Link>
             </button>
           </form>
 
@@ -161,3 +175,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

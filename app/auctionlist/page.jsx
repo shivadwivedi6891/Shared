@@ -173,31 +173,30 @@ export default function AuctionPage() {
                       }}
                       className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white"
                     >
-                        onClick={() => {
-                        setSelectedCar(vehicle);
-                        setModalOpen(true);
-                      }}
                       Gallery
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                      onClick={() => {
+                    <button 
+                     onClick={() => {
                         setSelectedCar(vehicle);
                         setModalOpen(true);
-                      }}
+                      }}className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                    
                       Vehicle Details
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                      onClick={() => {
+                    <button 
+                     onClick={() => {
                         setSelectedCar(vehicle);
                         setModalOpen(true);
                       }}
+                      className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                      
                       Other Details
                     </button>
-                    <button className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                      onClick={() => {
+                    <button  onClick={() => {
                         setSelectedCar(vehicle);
                         setModalOpen(true);
-                      }}
+                      }} className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                     
                       Evaluation Report
                     </button>
                   </div>

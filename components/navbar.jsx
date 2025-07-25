@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import { useState } from 'react';
@@ -129,6 +119,9 @@ export default function Navbar() {
             </Link>
             <Link href="/auction" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
               Auction
+            </Link>
+            <Link href="/vehicles" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+              Vehicles
             </Link>
             <Link href="/about" className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
               About

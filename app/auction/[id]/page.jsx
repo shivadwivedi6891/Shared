@@ -11,7 +11,7 @@ export default function CarDetailPage() {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const res = await fetch(`/api/car/${id}`); // ✅ FIXED: path matches route.js
+        const res = await fetch(`/api/car/${id}`); 
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
         setCar(data);
@@ -28,7 +28,7 @@ export default function CarDetailPage() {
   if (!car) return <div className="text-center mt-10">Loading...</div>;
 
   return (
-    <div className="p-4 max-w-3xl mx-auto bg-white dark:bg-gray-900 shadow-md rounded-lg mt-6">
+    <div className="p-4 max-w-3xl mx-auto bg-black dark:bg-gray-900 shadow-md rounded-lg mt-6">
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{car.name}</h1>
       <img
         src={car.image}

@@ -57,16 +57,16 @@ const auctions = [
 
 const AuctionList = () => {
   return (
-    <div className="flex flex-col lg:flex-row bg-[#121a26] text-white min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 text-black dark:bg-[#121a26] dark:text-white">
       {/* Sidebar */}
-      <aside className="w-full lg:w-64 bg-[#1f2937] p-5 border-b lg:border-b-0 lg:border-r border-gray-700">
-        <h2 className="text-xl font-bold mb-4 text-gray-200">Filter By</h2>
+      <aside className="w-full lg:w-64 bg-gray-200 dark:bg-[#1f2937] p-5 border-b lg:border-b-0 lg:border-r border-gray-700">
+        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Filter By</h2>
         <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
           Reset
         </button>
 
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-gray-300 mb-2">State</h3>
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">State</h3>
           <div className="flex flex-wrap gap-2">
             {[
               "Andhra Pradesh",
@@ -79,7 +79,7 @@ const AuctionList = () => {
             ].map((state) => (
               <span
                 key={state}
-                className="bg-[#374151] text-gray-300 text-xs px-2 py-1 rounded hover:bg-[#4b5563] cursor-pointer"
+                className="bg-gray-300 dark:bg-[#374151] text-black dark:text-gray-300 text-xs px-2 py-1 rounded hover:bg-gray-400 dark:hover:bg-[#4b5563] cursor-pointer"
               >
                 {state}
               </span>
@@ -89,7 +89,7 @@ const AuctionList = () => {
 
         {["Regions", "Brand Type", "Year of Manufacture"].map((cat) => (
           <div key={cat} className="mt-6">
-            <h3 className="text-sm font-medium text-gray-400 cursor-pointer">
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 cursor-pointer">
               + {cat}
             </h3>
           </div>
@@ -97,15 +97,15 @@ const AuctionList = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 sm:p-6">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center lg:text-left">
+      <main className="flex-1 p-4 sm:p-6 bg-gray-100 dark:bg-transparent">
+        <h1 className="text-2xl font-bold text-black dark:text-white mb-6 text-center lg:text-left">
           Live Auctions List
         </h1>
 
         {auctions.map((auction) => (
           <div
             key={auction.id}
-            className="bg-[#1e293b] rounded-xl shadow-md border border-gray-700 mb-6 overflow-hidden"
+            className="bg-white dark:bg-[#1e293b] rounded-xl shadow-md border border-gray-300 dark:border-gray-700 mb-6 overflow-hidden"
           >
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between gap-4 p-4">
@@ -113,15 +113,15 @@ const AuctionList = () => {
                 <img
                   src={auction.image}
                   alt={auction.title}
-                  className="w-32 h-20 object-cover rounded border border-gray-600"
+                  className="w-32 h-20 object-cover rounded border border-gray-300 dark:border-gray-600"
                 />
                 <div>
-                  <p className="text-blue-400 text-sm font-medium">
+                  <p className="text-blue-600 dark:text-blue-400 text-sm font-medium">
                     #{auction.date}
-                    <span className="text-green-500 ml-2">Current</span>
+                    <span className="text-green-600 dark:text-green-500 ml-2">Current</span>
                   </p>
-                  <h2 className="text-lg font-semibold text-white">{auction.title}</h2>
-                  <div className="text-sm text-gray-400 mt-1">
+                  <h2 className="text-lg font-semibold text-black dark:text-white">{auction.title}</h2>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                     <p>Published: {auction.published}</p>
                     <p>Start: {auction.start}</p>
                     <p>End: {auction.end}</p>
@@ -129,31 +129,31 @@ const AuctionList = () => {
                 </div>
               </div>
 
-              <button className="flex flex-col items-center text-blue-400 hover:text-blue-500 transition">
+              <button className="flex flex-col items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 transition">
                 <PlusCircle size={24} />
                 <span className="text-xs">Place Bids</span>
               </button>
             </div>
 
             {/* Footer */}
-            <div className="bg-[#111827] border-t border-gray-700 px-4 py-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm font-medium text-gray-300 text-center gap-4">
+            <div className="bg-gray-200 dark:bg-[#111827] border-t border-gray-300 dark:border-gray-700 px-4 py-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm font-medium text-center gap-4">
               <div>
-                <p className="text-base text-white">{auction.totalVehicles}</p>
+                <p className="text-base text-black dark:text-white">{auction.totalVehicles}</p>
                 <p>Total Vehicles</p>
               </div>
               <div>
-                <p className="text-base text-white">{auction.totalBids}</p>
+                <p className="text-base text-black dark:text-white">{auction.totalBids}</p>
                 <p>Total Bids</p>
               </div>
               <div>
-                <p className="text-base text-white">{auction.myBids}</p>
+                <p className="text-base text-black dark:text-white">{auction.myBids}</p>
                 <p>My Bids</p>
               </div>
               <div>
-                <button className="text-blue-500 hover:underline w-full">My Bid List</button>
+                <button className="text-blue-600 dark:text-blue-500 hover:underline w-full">My Bid List</button>
               </div>
               <div>
-                <Link href="/auctionlist" className="text-blue-500 hover:underline w-full">
+                <Link href="/auctionlist" className="text-blue-600 dark:text-blue-500 hover:underline w-full">
                   View Vehicle List
                 </Link>
               </div>

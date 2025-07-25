@@ -40,7 +40,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white px-4 py-12">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-gray-700 animate-slideFade">
-    =
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <div className="p-4 bg-gradient-to-r from-blue-500 to-fuchsia-500 rounded-full shadow-lg animate-pulse">

@@ -2,7 +2,6 @@ import React from "react";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 
-
 const auctions = [
   {
     id: 1,
@@ -58,8 +57,9 @@ const auctions = [
 
 const AuctionList = () => {
   return (
-    <div className="flex bg-[#121a26] text-white min-h-screen">
-      <aside className="w-64 bg-[#1f2937] p-5 border-r border-gray-700">
+    <div className="flex flex-col lg:flex-row bg-[#121a26] text-white min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-full lg:w-64 bg-[#1f2937] p-5 border-b lg:border-b-0 lg:border-r border-gray-700">
         <h2 className="text-xl font-bold mb-4 text-gray-200">Filter By</h2>
         <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
           Reset
@@ -96,15 +96,19 @@ const AuctionList = () => {
         ))}
       </aside>
 
-      <main className="flex-1 p-6">
-        <h1 className="text-2xl font-bold text-white mb-6">Live Auctions List</h1>
+      {/* Main Content */}
+      <main className="flex-1 p-4 sm:p-6">
+        <h1 className="text-2xl font-bold text-white mb-6 text-center lg:text-left">
+          Live Auctions List
+        </h1>
 
         {auctions.map((auction) => (
           <div
             key={auction.id}
             className="bg-[#1e293b] rounded-xl shadow-md border border-gray-700 mb-6 overflow-hidden"
           >
-            <div className="flex justify-between p-4">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between gap-4 p-4">
               <div className="flex gap-4">
                 <img
                   src={auction.image}
@@ -131,28 +135,27 @@ const AuctionList = () => {
               </button>
             </div>
 
-            <div className="bg-[#111827] border-t border-gray-700 px-4 py-3 flex justify-around text-sm font-medium text-gray-300">
-              <div className="text-center">
+            {/* Footer */}
+            <div className="bg-[#111827] border-t border-gray-700 px-4 py-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm font-medium text-gray-300 text-center gap-4">
+              <div>
                 <p className="text-base text-white">{auction.totalVehicles}</p>
                 <p>Total Vehicles</p>
               </div>
-              <div className="text-center">
+              <div>
                 <p className="text-base text-white">{auction.totalBids}</p>
                 <p>Total Bids</p>
               </div>
-              <div className="text-center">
+              <div>
                 <p className="text-base text-white">{auction.myBids}</p>
                 <p>My Bids</p>
               </div>
-              <div className="text-center">
-                <button className="text-blue-500 hover:underline">My Bid List</button>
+              <div>
+                <button className="text-blue-500 hover:underline w-full">My Bid List</button>
               </div>
-              <div className="text-center">
-                <button className="text-blue-500 hover:underline">
-                  
-                  <Link href="/auctionlist">View Vehicle List</Link>
-
-                </button>
+              <div>
+                <Link href="/auctionlist" className="text-blue-500 hover:underline w-full">
+                  View Vehicle List
+                </Link>
               </div>
             </div>
           </div>

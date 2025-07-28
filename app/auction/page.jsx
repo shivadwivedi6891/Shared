@@ -1,6 +1,7 @@
 import React from "react";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import PrivateRoute from "@/components/PrivateRoute";
 
 const auctions = [
   {
@@ -57,8 +58,9 @@ const auctions = [
 
 const AuctionList = () => {
   return (
+    <PrivateRoute>
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 text-black dark:bg-[#121a26] dark:text-white">
-      {/* Sidebar */}
+
       <aside className="w-full lg:w-64 bg-gray-200 dark:bg-[#1f2937] p-5 border-b lg:border-b-0 lg:border-r border-gray-700">
         <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Filter By</h2>
         <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
@@ -96,18 +98,15 @@ const AuctionList = () => {
         ))}
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-4 sm:p-6 bg-gray-100 dark:bg-transparent">
         <h1 className="text-2xl font-bold text-black dark:text-white mb-6 text-center lg:text-left">
           Live Auctions List
         </h1>
-
         {auctions.map((auction) => (
           <div
             key={auction.id}
             className="bg-white dark:bg-[#1e293b] rounded-xl shadow-md border border-gray-300 dark:border-gray-700 mb-6 overflow-hidden"
           >
-            {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between gap-4 p-4">
               <div className="flex gap-4">
                 <img
@@ -131,11 +130,12 @@ const AuctionList = () => {
 
               <button className="flex flex-col items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 transition">
                 <PlusCircle size={24} />
-                <span className="text-xs">Place Bids</span>
+                <span className="text-xs">
+                  <Link href="/auctionlist">Place Bids</Link>
+                </span>
               </button>
             </div>
 
-            {/* Footer */}
             <div className="bg-gray-200 dark:bg-[#111827] border-t border-gray-300 dark:border-gray-700 px-4 py-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm font-medium text-center gap-4">
               <div>
                 <p className="text-base text-black dark:text-white">{auction.totalVehicles}</p>
@@ -150,7 +150,9 @@ const AuctionList = () => {
                 <p>My Bids</p>
               </div>
               <div>
-                <button className="text-blue-600 dark:text-blue-500 hover:underline w-full">My Bid List</button>
+                <button className="text-blue-600 dark:text-blue-500 hover:underline w-full">
+                 <Link href="dashboard/buyer">My Bid List</Link> 
+                  </button>
               </div>
               <div>
                 <Link href="/auctionlist" className="text-blue-600 dark:text-blue-500 hover:underline w-full">
@@ -162,6 +164,7 @@ const AuctionList = () => {
         ))}
       </main>
     </div>
+    </PrivateRoute>
   );
 };
 

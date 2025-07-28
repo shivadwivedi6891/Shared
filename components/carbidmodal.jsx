@@ -8,8 +8,8 @@ import clsx from 'clsx';
 
 const tabs = ['Gallery', 'Vehicle Details', 'Other Details', 'Evaluation Report'];
 
-export default function CarBidModal({ car, onClose }) {
-  const [activeTab, setActiveTab] = useState('Gallery');
+export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [selectedImage, setSelectedImage] = useState('');
   const [bidAmount, setBidAmount] = useState('');
   const [agree, setAgree] = useState(false);
@@ -21,15 +21,19 @@ export default function CarBidModal({ car, onClose }) {
     }
   }, [car]);
 
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab, car]);
+
   const handleSubmit = () => {
     const enteredBid = parseFloat(bidAmount);
     const baseBid = parseFloat(car?.startingBid || 0);
     if (enteredBid > baseBid) {
-      alert(`✅ Bid placed successfully: ₹${enteredBid}`);
+      alert(` Bid placed successfully: ₹${enteredBid}`);
       setBidError('');
       onClose();
     } else {
-      setBidError(`❌ Bid must be greater than ₹${baseBid}`);
+      setBidError(` Bid must be greater than ₹${baseBid}`);
     }
   };
 
@@ -171,4 +175,3 @@ export default function CarBidModal({ car, onClose }) {
     </div>
   );
 }
-

@@ -4,8 +4,6 @@ import PrivateRoute from "@/components/PrivateRoute";
 
 export default function PrivacyPolicy() {
   return (
-<PrivateRoute>
-  
     <main className="min-h-screen bg-black text-white px-6 py-20 sm:px-12 lg:px-32">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-purple-500 mb-6">Privacy Policy</h1>
@@ -74,6 +72,6 @@ export default function PrivacyPolicy() {
         </p>
       </div>
     </main>
-</PrivateRoute>
+
   );
 }

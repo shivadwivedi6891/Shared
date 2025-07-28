@@ -93,6 +93,7 @@ export default function AuctionPage() {
   const [bids, setBids] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
+  const [activeTab, setActiveTab] = useState('Gallery');
 
   const handleInputChange = (id, field, value) => {
     setBids((prev) => ({
@@ -166,39 +167,19 @@ export default function AuctionPage() {
                   </h2>
 
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedCar(vehicle);
-                        setModalOpen(true);
-                      }}
-                      className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white"
-                    >
-                      Gallery
-                    </button>
-                    <button 
-                     onClick={() => {
-                        setSelectedCar(vehicle);
-                        setModalOpen(true);
-                      }}className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                    
-                      Vehicle Details
-                    </button>
-                    <button 
-                     onClick={() => {
-                        setSelectedCar(vehicle);
-                        setModalOpen(true);
-                      }}
-                      className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                      
-                      Other Details
-                    </button>
-                    <button  onClick={() => {
-                        setSelectedCar(vehicle);
-                        setModalOpen(true);
-                      }} className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                     
-                      Evaluation Report
-                    </button>
+                    {['Gallery', 'Vehicle Details', 'Other Details', 'Evaluation Report'].map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => {
+                          setSelectedCar(vehicle);
+                          setActiveTab(tab);
+                          setModalOpen(true);
+                        }}
+                        className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white"
+                      >
+                        {tab}
+                      </button>
+                    ))}
                   </div>
 
                   <button className="w-full mt-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-sm flex items-center justify-center gap-2 text-gray-800 dark:text-white">
@@ -233,7 +214,9 @@ export default function AuctionPage() {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md"
                       disabled={!bid.agree || !bid.amount}
                     >
-                      Place Bid
+                      <Link href="">Place Bid</Link>
+                    
+
                     </button>
                   </div>
                 </div>
@@ -244,7 +227,7 @@ export default function AuctionPage() {
       </div>
 
       {isModalOpen && selectedCar && (
-        <CarBidModal car={selectedCar} onClose={() => setModalOpen(false)} />
+        <CarBidModal car={selectedCar} initialTab={activeTab} onClose={() => setModalOpen(false)} />
       )}
     </div>
   );

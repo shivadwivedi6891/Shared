@@ -9,7 +9,7 @@ export default function RegisterPage() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '', // ✅ Added phone field
+    phone: '', 
     password: '',
     confirmPassword: '',
   });
@@ -25,11 +25,9 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       
-      {/* Left Form Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-4 sm:px-8 md:px-12 py-12">
         <div className="w-full max-w-md">
           
-          {/* Logo + Heading */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-md">
@@ -42,7 +40,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -81,7 +78,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* ✅ Phone Number Field */}
             <div>
               <label className="block text-sm font-medium mb-1">Phone Number</label>
               <input
@@ -128,7 +124,6 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          {/* Footer */}
           <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
             <Link href="/login" className="text-blue-600 hover:underline font-medium">
@@ -137,8 +132,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-
-      {/* Right Image Section */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <img
           src="https://images.pexels.com/photos/170812/pexels-photo-170812.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
@@ -155,8 +148,6 @@ export default function RegisterPage() {
           </p>
         </div>
       </div>
-
-      {/* Animation */}
       <style jsx>{`
         @keyframes fadeSlide {
           0% {

@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Car, Eye, EyeOff, RefreshCcw } from 'lucide-react';
+import { Car, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -52,26 +51,35 @@ export default function LoginPage() {
     router.push(`/dashboard/buyer`);
   };
 
+  const handleSendOtp = () => {
+    if (!formData.phone.match(/^\d{10}$/)) {
+      alert('Please enter a valid 10-digit phone number.');
+      return;
+    }
+    alert(`Your OTP has been sent to +91-${formData.phone}`);
+    // Here, you can integrate actual OTP sending logic (API call)
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white px-4 py-8">
-      <div className="w-full max-w-sm bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-700 space-y-5">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:via-black dark:to-gray-800 text-black dark:text-white px-4 py-8">
+      <div className="w-full max-w-sm bg-white/50 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-300 dark:border-gray-700 space-y-5">
         <div className="text-center">
           <Car className="mx-auto h-8 w-8 text-white p-2 bg-gradient-to-r from-blue-500 to-fuchsia-500 rounded-full shadow-lg animate-pulse" />
           <h1 className="mt-4 text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             AutoBid Login
           </h1>
-          <p className="text-sm text-gray-300">Secure login to explore luxury auctions</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Secure login to explore luxury auctions</p>
         </div>
 
         <div className="flex justify-center">
-          <div className="flex items-center gap-2 bg-white/10 p-1 rounded-full border border-gray-700 shadow-inner">
+          <div className="flex items-center gap-2 bg-white/30 dark:bg-white/10 p-1 rounded-full border border-gray-300 dark:border-gray-700 shadow-inner">
             <button
               type="button"
               onClick={() => setLoginMethod('email')}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                 loginMethod === 'email'
                   ? 'bg-gradient-to-r from-blue-500 to-fuchsia-500 text-white shadow-md'
-                  : 'text-gray-300 hover:text-white'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white'
               }`}
             >
               Email
@@ -82,7 +90,7 @@ export default function LoginPage() {
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                 loginMethod === 'phone'
                   ? 'bg-gradient-to-r from-blue-500 to-fuchsia-500 text-white shadow-md'
-                  : 'text-gray-300 hover:text-white'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white'
               }`}
             >
               Phone
@@ -94,7 +102,7 @@ export default function LoginPage() {
           {loginMethod === 'email' ? (
             <>
               <div>
-                <label className="text-sm text-gray-300 mb-1 block">Email</label>
+                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Email</label>
                 <input
                   type="email"
                   name="email"
@@ -104,11 +112,11 @@ export default function LoginPage() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   placeholder="xyz@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-white/10 text-white border border-gray-600 placeholder-gray-400"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-300 mb-1 block">Password</label>
+                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Password</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -119,12 +127,12 @@ export default function LoginPage() {
                       setFormData({ ...formData, password: e.target.value })
                     }
                     placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-12 rounded-xl bg-white/10 text-white border border-gray-600 placeholder-gray-400"
+                    className="w-full px-4 py-3 pr-12 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-200"
+                    className="absolute right-3 top-3 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-gray-200"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -134,7 +142,7 @@ export default function LoginPage() {
           ) : (
             <>
               <div>
-                <label className="text-sm text-gray-300 mb-1 block">Phone Number</label>
+                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Phone Number</label>
                 <input
                   type="tel"
                   name="phone"
@@ -146,39 +154,41 @@ export default function LoginPage() {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   placeholder="Enter 10-digit phone"
-                  className="w-full px-4 py-3 rounded-xl bg-white/10 text-white border border-gray-600 placeholder-gray-400"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-300 mb-1 block">OTP</label>
-                <input
-                  type="text"
-                  name="otp"
-                  required
-                  maxLength={6}
-                  value={formData.otp}
-                  onChange={(e) =>
-                    setFormData({ ...formData, otp: e.target.value })
-                  }
-                  placeholder="Enter OTP"
-                  className="w-full px-4 py-3 rounded-xl bg-white/10 text-white border border-gray-600 placeholder-gray-400"
-                />
+                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">OTP</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    name="otp"
+                    required
+                    maxLength={6}
+                    value={formData.otp}
+                    onChange={(e) =>
+                      setFormData({ ...formData, otp: e.target.value })
+                    }
+                    placeholder="Enter OTP"
+                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    className="px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-xl hover:scale-105 transition-transform shadow"
+                  >
+                    Send OTP
+                  </button>
+                </div>
               </div>
             </>
           )}
 
+          {/* CAPTCHA */}
           <div>
-            <label className="text-sm font-medium text-gray-300 mb-2 block">Captcha *</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Captcha *</label>
             <div className="flex items-center gap-3">
-              <LoadCanvasTemplate />
-              <button
-                type="button"
-                onClick={() => loadCaptchaEnginge(6)}
-                className="text-white hover:text-blue-400 bg-white/10 border border-gray-600 p-2 rounded-full shadow"
-                title="Refresh Captcha"
-              >
-                <RefreshCcw className="h-5 w-5" />
-              </button>
+              <LoadCanvasTemplate reloadText={false} />
             </div>
             <input
               type="text"
@@ -186,7 +196,7 @@ export default function LoginPage() {
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
               placeholder="Enter Captcha"
-              className="w-full mt-3 px-4 py-3 rounded-xl bg-white/10 text-white border border-gray-600 placeholder-gray-400"
+              className="w-full mt-3 px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 
@@ -198,9 +208,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-center text-sm text-gray-400">
+        <div className="text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?{' '}
-          <Link href="/register" className="text-blue-400 hover:underline font-medium">
+          <Link href="/register" className="text-blue-500 hover:underline font-medium">
             Register here
           </Link>
         </div>

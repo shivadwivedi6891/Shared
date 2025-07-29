@@ -11,7 +11,9 @@
   "dependencies": {
     "@headlessui/react": "^2.2.5",
     "axios": "^1.11.0",
+    "font": "^0.0.4",
     "framer-motion": "^12.23.9",
+    "google": "^2.1.0",
     "lucide-react": "^0.525.0",
     "next": "15.4.2",
     "next-themes": "^0.4.6",

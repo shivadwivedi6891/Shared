@@ -84,7 +84,7 @@ export default function AllCarsPage() {
   }
 
   return (
-    <PrivateRoute>
+ 
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 dark:from-[#0f0f0f] dark:to-[#1a1a1a] py-12 px-6">
         <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-800 dark:text-white">
           Explore Cars for Auction
@@ -145,53 +145,11 @@ export default function AllCarsPage() {
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    {/* <input
-                      type="number"
-                      placeholder="Your Bid"
-                      value={carBid.bidAmount || ""}
-                      onChange={(e) =>
-                        handleInputChange(
-                          car.id,
-                          "bidAmount",
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    /> */}
-
-                    {/* <label className="flex items-center space-x-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={carBid.agree || false}
-                        onChange={(e) =>
-                          handleInputChange(
-                            car.id,
-                            "agree",
-                            e.target.checked
-                          )
-                        }
-                        className="accent-purple-600"
-                      />
-                      <span className="text-gray-700 dark:text-gray-300">
-                        I Agree{" "}
-                        <span className="underline">
-                          <Link href="/terms">Terms & Conditions</Link>
-                        </span>
-                      </span>
-                    </label> */}
-
+                   
                     <div className="flex gap-2">
                       <button className="flex-1 bg-purple-800 hover:bg-yellow-700 text-white py-2 rounded-lg text-sm">
                         <Link href={`/auction/${car.id}`}>View Details</Link>
                       </button>
-
-                      {/* <button
-                        className="flex-1 bg-purple-700 hover:bg-purple-800 text-white py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isBidInvalid}
-                        onClick={() => handlePlaceBid(car.id, car.name)}
-                      >
-                        Place Bid
-                      </button> */}
                     </div>
                   </div>
                 </div>
@@ -200,6 +158,5 @@ export default function AllCarsPage() {
           })}
         </div>
       </div>
-    </PrivateRoute>
   );
 }

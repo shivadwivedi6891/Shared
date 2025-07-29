@@ -39,29 +39,45 @@ export default function FAQPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16">
+    <main className="min-h-screen bg-white dark:bg-black px-4 sm:px-6 md:px-10 py-16 text-black dark:text-white transition-colors duration-300">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4">Frequently Asked Questions</h1>
-        <p className="text-center text-gray-400 mb-12">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-4">
+          Frequently Asked Questions
+        </h1>
+        <p className="text-center text-gray-600 dark:text-gray-400 mb-12 text-sm sm:text-base">
           Answers to the most common questions about buying and selling cars on our platform.
         </p>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           {faqData.map((faq, index) => (
             <div
               key={index}
-              className="border border-white/10 rounded-lg p-6 bg-white/5 transition-all duration-300"
+              className={`border border-gray-200 dark:border-white/10 rounded-xl p-5 bg-gray-50 dark:bg-white/5 transition-all duration-300 shadow-sm ${
+                openIndex === index ? 'ring-2 ring-indigo-500/20' : ''
+              }`}
             >
               <button
                 onClick={() => toggleAnswer(index)}
-                className="flex items-center justify-between w-full text-left text-lg font-semibold"
+                className="flex items-center justify-between w-full text-left text-base sm:text-lg font-medium focus:outline-none"
               >
-                {faq.question}
-                {openIndex === index ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                <span>{faq.question}</span>
+                {openIndex === index ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
               </button>
-              {openIndex === index && (
-                <p className="mt-4 text-gray-300 text-sm leading-relaxed">{faq.answer}</p>
-              )}
+              <div
+                className={`grid transition-all duration-300 ease-in-out ${
+                  openIndex === index ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>

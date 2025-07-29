@@ -1,6 +1,6 @@
 'use client';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Upload, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -15,10 +15,15 @@ const KYCModal = ({ isOpen, onClose }) => {
     aadharPhoto: false,
   });
 
+  const panInputRef = useRef(null);
+  const aadharInputRef = useRef(null);
+
   const { completeKYC } = useAuth();
 
-  const handleFileUpload = (fileType) => {
-    setUploadedFiles({ ...uploadedFiles, [fileType]: true });
+  const handleFileChange = (e, type) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadedFiles({ ...uploadedFiles, [type]: true });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -87,9 +92,16 @@ const KYCModal = ({ isOpen, onClose }) => {
                         <div className="text-center">
                           <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
                           <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload PAN</p>
+                          <input
+                            type="file"
+                            ref={panInputRef}
+                            onChange={(e) => handleFileChange(e, 'panPhoto')}
+                            className="hidden"
+                            accept="image/*,.pdf"
+                          />
                           <button
                             type="button"
-                            onClick={() => handleFileUpload('panPhoto')}
+                            onClick={() => panInputRef.current.click()}
                             className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
                           >
                             Choose File
@@ -132,9 +144,16 @@ const KYCModal = ({ isOpen, onClose }) => {
                         <div className="text-center">
                           <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
                           <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload Aadhar</p>
+                          <input
+                            type="file"
+                            ref={aadharInputRef}
+                            onChange={(e) => handleFileChange(e, 'aadharPhoto')}
+                            className="hidden"
+                            accept="image/*,.pdf"
+                          />
                           <button
                             type="button"
-                            onClick={() => handleFileUpload('aadharPhoto')}
+                            onClick={() => aadharInputRef.current.click()}
                             className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
                           >
                             Choose File
@@ -161,8 +180,3 @@ const KYCModal = ({ isOpen, onClose }) => {
 };
 
 export default KYCModal;
-
-
-
-
-

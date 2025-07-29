@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Car, Eye, EyeOff } from 'lucide-react';
+import { Car } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -12,12 +12,8 @@ import {
 } from 'react-simple-captcha';
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginMethod, setLoginMethod] = useState('email');
   const [captchaInput, setCaptchaInput] = useState('');
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
     phone: '',
     otp: '',
     userType: 'buyer',
@@ -41,7 +37,7 @@ export default function LoginPage() {
     }
 
     const dummyUser = {
-      name: loginMethod === 'email' ? formData.email : formData.phone,
+      name: formData.phone,
       id: crypto.randomUUID(),
       role: formData.userType,
       kycCompleted: false,
@@ -57,7 +53,6 @@ export default function LoginPage() {
       return;
     }
     alert(`Your OTP has been sent to +91-${formData.phone}`);
-    // Here, you can integrate actual OTP sending logic (API call)
   };
 
   return (
@@ -71,120 +66,49 @@ export default function LoginPage() {
           <p className="text-sm text-gray-600 dark:text-gray-300">Secure login to explore luxury auctions</p>
         </div>
 
-        <div className="flex justify-center">
-          <div className="flex items-center gap-2 bg-white/30 dark:bg-white/10 p-1 rounded-full border border-gray-300 dark:border-gray-700 shadow-inner">
-            <button
-              type="button"
-              onClick={() => setLoginMethod('email')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                loginMethod === 'email'
-                  ? 'bg-gradient-to-r from-blue-500 to-fuchsia-500 text-white shadow-md'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white'
-              }`}
-            >
-              Email
-            </button>
-            <button
-              type="button"
-              onClick={() => setLoginMethod('phone')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                loginMethod === 'phone'
-                  ? 'bg-gradient-to-r from-blue-500 to-fuchsia-500 text-white shadow-md'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white'
-              }`}
-            >
-              Phone
-            </button>
-          </div>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
-          {loginMethod === 'email' ? (
-            <>
-              <div>
-                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="xyz@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Password</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    required
-                    value={formData.password}
-                    onChange={(e) =>
-                      setFormData({ ...formData, password: e.target.value })
-                    }
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-12 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-gray-200"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  required
-                  pattern="[0-9]{10}"
-                  maxLength={10}
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  placeholder="Enter 10-digit phone"
-                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">OTP</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    name="otp"
-                    required
-                    maxLength={6}
-                    value={formData.otp}
-                    onChange={(e) =>
-                      setFormData({ ...formData, otp: e.target.value })
-                    }
-                    placeholder="Enter OTP"
-                    className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    className="px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-xl hover:scale-105 transition-transform shadow"
-                  >
-                    Send OTP
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
+          <div>
+            <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              pattern="[0-9]{10}"
+              maxLength={10}
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              placeholder="Enter 10-digit phone"
+              className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
+            />
+          </div>
 
-          {/* CAPTCHA */}
+          <div>
+            <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">OTP</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                name="otp"
+                required
+                maxLength={6}
+                value={formData.otp}
+                onChange={(e) =>
+                  setFormData({ ...formData, otp: e.target.value })
+                }
+                placeholder="Enter OTP"
+                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className="px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-xl hover:scale-105 transition-transform shadow"
+              >
+                Send OTP
+              </button>
+            </div>
+          </div>
+
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Captcha *</label>
             <div className="flex items-center gap-3">

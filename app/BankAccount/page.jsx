@@ -99,6 +99,7 @@ export default function BankAccountPage() {
               <label className="block text-sm mb-1">Bank Name *</label>
               <input
                 type="text"
+                placeholder="Enter your bank name"
                 value={formData.bankName}
                 onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
                 className={`w-full border ${errors.bankName ? 'border-red-500' : 'border-gray-300'} px-4 py-2 rounded-md`}
@@ -111,6 +112,7 @@ export default function BankAccountPage() {
               <label className="block text-sm mb-1">Account Number *</label>
               <input
                 type="text"
+                placeholder="Enter your account number"
                 value={formData.accountNumber}
                 onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
                 className={`w-full border ${errors.accountNumber ? 'border-red-500' : 'border-gray-300'} px-4 py-2 rounded-md`}
@@ -123,6 +125,7 @@ export default function BankAccountPage() {
               <label className="block text-sm mb-1">IFSC Code *</label>
               <input
                 type="text"
+                placeholder="Enter IFSC code (e.g. ICIC0001234)"
                 value={formData.ifscCode}
                 onChange={(e) => setFormData({ ...formData, ifscCode: e.target.value.toUpperCase() })}
                 className={`w-full border ${errors.ifscCode ? 'border-red-500' : 'border-gray-300'} px-4 py-2 rounded-md`}
@@ -135,6 +138,7 @@ export default function BankAccountPage() {
               <label className="block text-sm mb-1">Account Holder Name *</label>
               <input
                 type="text"
+                placeholder="Enter account holder's name"
                 value={formData.accountHolder}
                 onChange={(e) => setFormData({ ...formData, accountHolder: e.target.value })}
                 className={`w-full border ${errors.accountHolder ? 'border-red-500' : 'border-gray-300'} px-4 py-2 rounded-md`}

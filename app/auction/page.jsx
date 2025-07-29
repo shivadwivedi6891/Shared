@@ -1,8 +1,7 @@
 'use client';
-import React, { useState } from "react";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
-import PrivateRoute from "@/components/PrivateRoute";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { PlusCircle } from 'lucide-react';
 
 const auctionsData = [
 
@@ -226,61 +225,87 @@ const auctionsData = [
   },
 ];
 
-// States list
-const statesList = [
-  "Andhra Pradesh",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Orissa",
-  "Rajasthan",
-  "Telangana",
-  "West Bengal",
-];
+const getUniqueValues = (data, key) => {
+  return [...new Set(data.map((item) => item[key]).filter(Boolean))];
+};
 
-const AuctionList = () => {
-  const [selectedState, setSelectedState] = useState(null);
+export default function AuctionList() {
+  const [filters, setFilters] = useState({
+    state: '',
+    city: '',
+    region: '',
+    brand: '',
+    year: '',
+  });
 
-  const handleStateClick = (state) => {
-    setSelectedState(selectedState === state ? null : state);
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
-  const filteredAuctions = selectedState
-    ? auctionsData.filter((auction) => auction.state === selectedState)
-    : auctionsData;
+  const resetFilters = () => {
+    setFilters({ state: '', city: '', region: '', brand: '', year: '' });
+  };
+
+  const filteredAuctions = auctionsData.filter((auction) => {
+    return (
+      (!filters.state || auction.state === filters.state) &&
+      (!filters.city || auction.city === filters.city) &&
+      (!filters.region || auction.region === filters.region) &&
+      (!filters.brand || auction.brand === filters.brand) &&
+      (!filters.year || auction.year === filters.year)
+    );
+  });
+
+  const SelectFilter = ({ label, keyName, options }) => (
+    <div className="mb-4">
+      <label className="block font-semibold mb-1">{label}</label>
+      <select
+        value={filters[keyName]}
+        onChange={(e) => handleFilterChange(keyName, e.target.value)}
+        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#1f2937] text-black dark:text-white"
+      >
+        <option value="">All</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
+  const states = getUniqueValues(auctionsData, 'state');
+  const cities = getUniqueValues(auctionsData, 'city');
+  const regions = getUniqueValues(auctionsData, 'region');
+  const brands = getUniqueValues(auctionsData, 'brand');
+  const years = getUniqueValues(auctionsData, 'year');
 
   return (
-   
-      <div className="min-h-screen bg-gray-100 text-black dark:bg-[#121a26] dark:text-white px-4 sm:px-10 py-6">
-        <div className="flex flex-col gap-4 lg:flex-row justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-center lg:text-left">
-            {selectedState ? `Auctions in ${selectedState}` : "Live Auctions"}
-          </h1>
-          <button
-            onClick={() => setSelectedState(null)}
-            className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Reset Filter
-          </button>
-        </div>
+    <div className="flex flex-col lg:flex-row bg-gray-100 dark:bg-[#121a26] min-h-screen text-black dark:text-white">
+      <aside className="w-full lg:w-1/4 bg-white dark:bg-[#1e293b] p-5 border-r border-gray-300 dark:border-gray-700">
+        <h2 className="text-2xl font-bold mb-4">Filter By</h2>
+        <button
+          onClick={resetFilters}
+          className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 w-full mb-6"
+        >
+          Reset
+        </button>
+        <SelectFilter label="State" keyName="state" options={states} />
+        <SelectFilter label="City" keyName="city" options={cities} />
+        <SelectFilter label="Region" keyName="region" options={regions} />
+        <SelectFilter label="Brand Type" keyName="brand" options={brands} />
+        <SelectFilter label="Year of Manufacture" keyName="year" options={years} />
+      </aside>
 
-        <div className="flex flex-wrap gap-2 mb-8 justify-center lg:justify-start">
-          {statesList.map((state) => (
-            <button
-              key={state}
-              onClick={() => handleStateClick(state)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition ${
-                selectedState === state
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white dark:bg-[#1f2937] text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-blue-100 dark:hover:bg-[#374151]"
-              }`}
-            >
-              {state}
-            </button>
-          ))}
-        </div>
+      <main className="w-full lg:w-3/4 p-6">
+        <h1 className="text-2xl font-bold mb-4">
+          {filters.state ? `Auctions in ${filters.state}` : 'Live Auctions'}
+        </h1>
 
-        {filteredAuctions.length > 0 ? (
+        {filteredAuctions.length ? (
           filteredAuctions.map((auction) => (
             <div
               key={auction.id}
@@ -306,13 +331,12 @@ const AuctionList = () => {
                     </div>
                   </div>
                 </div>
-
-                <button className="flex flex-col items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500 transition">
-                  <PlusCircle size={24} />
-                  <span className="text-xs">
-                    <Link href="/auctionlist">Place Bids</Link>
-                  </span>
-                </button>
+                <div className="flex flex-col items-center justify-center">
+                  <PlusCircle size={24} className="text-blue-600 dark:text-blue-400" />
+                  <Link href="/auctionlist" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                    Place Bids
+                  </Link>
+                </div>
               </div>
 
               <div className="bg-gray-200 dark:bg-[#111827] border-t border-gray-300 dark:border-gray-700 px-4 py-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm font-medium text-center gap-4">
@@ -342,14 +366,11 @@ const AuctionList = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-600 dark:text-gray-400 mt-10">
-            No auctions available for the selected state.
+          <p className="text-gray-600 dark:text-gray-400 mt-10 text-center">
+            No auctions found for selected filters.
           </p>
         )}
-      </div>
-
+      </main>
+    </div>
   );
-};
-
-export default AuctionList;
-
+}

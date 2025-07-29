@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import TermsConditionModal from './termsconditionModal'; 
 
 const tabs = ['Gallery', 'Vehicle Details', 'Other Details', 'Evaluation Report'];
 
@@ -14,6 +15,7 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
   const [bidAmount, setBidAmount] = useState('');
   const [agree, setAgree] = useState(false);
   const [bidError, setBidError] = useState('');
+  const [showTermsModal, setShowTermsModal] = useState(false); 
 
   useEffect(() => {
     if (car?.images?.length) {
@@ -39,6 +41,11 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+      {/* ✅ Show Terms Modal on top */}
+      {showTermsModal && (
+        <TermsConditionModal onClose={() => setShowTermsModal(false)} />
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: -60 }}
         animate={{ opacity: 1, y: 0 }}
@@ -157,7 +164,14 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
               <div className="flex items-center gap-2 text-sm">
                 <input type="checkbox" id="agree" checked={agree} onChange={() => setAgree(!agree)} />
                 <label htmlFor="agree">
-                  I Agree to <a href="#" className="text-blue-600 underline">Terms & Conditions</a>
+                  I Agree to{' '}
+                  <button
+                    type="button"
+                    onClick={() => setShowTermsModal(true)} // ✅ Show Terms Modal
+                    className="text-blue-600 underline"
+                  >
+                    Terms & Conditions
+                  </button>
                 </label>
               </div>
 

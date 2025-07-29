@@ -15,27 +15,56 @@ const KYCModal = ({ isOpen, onClose }) => {
     aadharPhoto: false,
   });
 
+  const [fileErrors, setFileErrors] = useState({
+    panPhoto: '',
+    aadharPhoto: '',
+  });
+
   const panInputRef = useRef(null);
   const aadharInputRef = useRef(null);
 
   const { completeKYC } = useAuth();
 
+  const validatePAN = (pan) => /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan.toUpperCase());
+  const validateAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
+
   const handleFileChange = (e, type) => {
-    if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/png'];
+      const validExtensions = ['jpg', 'jpeg', 'png'];
+
+      const fileType = file.type;
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (!validTypes.includes(fileType) || !validExtensions.includes(fileExtension)) {
+        setUploadedFiles({ ...uploadedFiles, [type]: false });
+        setFileErrors({ ...fileErrors, [type]: 'Only JPG and PNG files are allowed.' });
+        e.target.value = ''; // Reset file input
+        return;
+      }
+
       setUploadedFiles({ ...uploadedFiles, [type]: true });
+      setFileErrors({ ...fileErrors, [type]: '' });
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { panNumber, aadharNumber } = formData;
 
-    if (!formData.panNumber || !formData.aadharNumber) {
-      alert('Please enter both PAN and Aadhar numbers.');
+    if (!validatePAN(panNumber)) {
+      alert('❌ Invalid PAN number. Format should be 5 letters, 4 digits, 1 letter (e.g., ABCDE1234F).');
+      return;
+    }
+
+    if (!validateAadhar(aadharNumber)) {
+      alert('❌ Invalid Aadhar number. It should be a 12-digit number.');
       return;
     }
 
     if (!uploadedFiles.panPhoto || !uploadedFiles.aadharPhoto) {
-      alert('Please upload both PAN and Aadhar document photos.');
+      alert('❌ Please upload both PAN and Aadhar document photos (.jpg/.png only).');
       return;
     }
 
@@ -60,6 +89,7 @@ const KYCModal = ({ isOpen, onClose }) => {
               </Dialog.Title>
 
               <form onSubmit={handleSubmit} className="space-y-8">
+                {/* PAN Section */}
                 <div>
                   <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-100 mb-3">
                     PAN Details
@@ -75,7 +105,7 @@ const KYCModal = ({ isOpen, onClose }) => {
                         required
                         value={formData.panNumber}
                         onChange={(e) =>
-                          setFormData({ ...formData, panNumber: e.target.value })
+                          setFormData({ ...formData, panNumber: e.target.value.toUpperCase() })
                         }
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
                         placeholder="Enter PAN number"
@@ -91,13 +121,13 @@ const KYCModal = ({ isOpen, onClose }) => {
                       ) : (
                         <div className="text-center">
                           <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload PAN</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload PAN (.jpg/.png)</p>
                           <input
                             type="file"
                             ref={panInputRef}
                             onChange={(e) => handleFileChange(e, 'panPhoto')}
                             className="hidden"
-                            accept="image/*,.pdf"
+                            accept=".jpg,.jpeg,.png"
                           />
                           <button
                             type="button"
@@ -106,12 +136,16 @@ const KYCModal = ({ isOpen, onClose }) => {
                           >
                             Choose File
                           </button>
+                          {fileErrors.panPhoto && (
+                            <p className="text-xs text-red-500 mt-2">{fileErrors.panPhoto}</p>
+                          )}
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
 
+                {/* Aadhar Section */}
                 <div>
                   <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-100 mb-3">
                     Aadhar Details
@@ -127,7 +161,7 @@ const KYCModal = ({ isOpen, onClose }) => {
                         required
                         value={formData.aadharNumber}
                         onChange={(e) =>
-                          setFormData({ ...formData, aadharNumber: e.target.value })
+                          setFormData({ ...formData, aadharNumber: e.target.value.replace(/\D/g, '') })
                         }
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
                         placeholder="Enter Aadhar number"
@@ -143,13 +177,13 @@ const KYCModal = ({ isOpen, onClose }) => {
                       ) : (
                         <div className="text-center">
                           <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload Aadhar</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Upload Aadhar (.jpg/.png)</p>
                           <input
                             type="file"
                             ref={aadharInputRef}
                             onChange={(e) => handleFileChange(e, 'aadharPhoto')}
                             className="hidden"
-                            accept="image/*,.pdf"
+                            accept=".jpg,.jpeg,.png"
                           />
                           <button
                             type="button"
@@ -158,6 +192,9 @@ const KYCModal = ({ isOpen, onClose }) => {
                           >
                             Choose File
                           </button>
+                          {fileErrors.aadharPhoto && (
+                            <p className="text-xs text-red-500 mt-2">{fileErrors.aadharPhoto}</p>
+                          )}
                         </div>
                       )}
                     </div>

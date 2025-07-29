@@ -47,7 +47,7 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
-            {['/', '/auction', '/vehicles', '/about'].map((path, idx) => (
+            {['/', '/auction', '/about'].map((path, idx) => (
               <Link
                 key={idx}
                 href={path}
@@ -124,7 +124,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden px-4 pt-3 pb-4 space-y-2">
-            {['/', '/auction', '/vehicles', '/about'].map((path, idx) => (
+            {['/', '/auction', '/about'].map((path, idx) => (
               <Link
                 key={idx}
                 href={path}

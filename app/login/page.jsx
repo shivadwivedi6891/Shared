@@ -22,24 +22,17 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const token = localStorage.getItem('user')
-
-
-
   useEffect(() => {
     loadCaptchaEnginge(6);
   }, []);
 
-
-  useEffect(()=>{
-
-if(token){
-
- router.push(`/dashboard/buyer`);
-
-}
-
-  },[])
+  // ✅ Fix: check localStorage in useEffect only (runs in browser)
+  useEffect(() => {
+    const token = localStorage.getItem('user');
+    if (token) {
+      router.push(`/dashboard/buyer`);
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,22 +96,22 @@ if(token){
             <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">OTP</label>
             <div className="flex items-center gap-2">
               <input
-             type="text"
-             name="otp"
-             inputMode="numeric"
-             pattern="\d{6}"
-             maxLength={6}
-             required
-             value={formData.otp}
-            onChange={(e) => {
-            const value = e.target.value;
-            if (/^\d{0,6}$/.test(value)) {
-            setFormData({ ...formData, otp: value });
-            }
-            }}
-            placeholder="Enter OTP"
-           className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400" />
- 
+                type="text"
+                name="otp"
+                inputMode="numeric"
+                pattern="\d{6}"
+                maxLength={6}
+                required
+                value={formData.otp}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,6}$/.test(value)) {
+                    setFormData({ ...formData, otp: value });
+                  }
+                }}
+                placeholder="Enter OTP"
+                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
+              />
               <button
                 type="button"
                 onClick={handleSendOtp}
@@ -162,3 +155,9 @@ if(token){
     </div>
   );
 }
+
+
+
+
+
+

@@ -108,8 +108,8 @@ export default function HomePage() {
               <p>Start date: 29-07-2025 02:30:00 PM</p>
               <p>End date: 29-07-2025 06:00:00 PM</p>
               <div className="flex items-center gap-70 pt-3">
-                <button className="text-blue-700 underline text-sm">📄 My Bid List</button>
-                <button className="text-blue-700 underline text-sm">📃 View Vehicle List</button>
+                <button className="text-blue-700 text-sm hover:text-purple-500">📄 My Bid List</button>
+                <button className="text-blue-700 text-sm hover:text-purple-500">📃 View Vehicle List</button>
               </div>
             </div>
             <div className="flex items-start justify-end">

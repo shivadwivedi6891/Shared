@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,12 +8,12 @@ import { useTheme } from 'next-themes';
 import {
   Menu,
   X,
-  Sun,
-  Moon,
   Car,
   User,
-  Settings,
-  LogOut
+  LogOut,
+  Home,
+  Info,
+  Gavel,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -30,6 +31,7 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
@@ -47,17 +49,22 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
-            {['/', '/auction', '/about'].map((path, idx) => (
+            {['/', '/Category', '/about'].map((path, idx) => (
               <Link
                 key={idx}
                 href={path}
                 className="text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 font-medium px-3 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700/50"
               >
-                {path === '/' ? 'Home' : path.replace('/', '').charAt(0).toUpperCase() + path.slice(2)}
+                {path === '/'
+                  ? 'Home'
+                  : path === '/Category'
+                  ? 'Auction'
+                  : path.replace('/', '').charAt(0).toUpperCase() + path.slice(2)}
               </Link>
             ))}
           </div>
 
+          {/* Desktop Right */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="relative">
@@ -76,13 +83,6 @@ export default function Navbar() {
                     >
                       <User className="inline-block w-4 h-4 mr-2" />
                       Dashboard
-                    </Link>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700"
-                    >
-                      <Settings className="inline-block w-4 h-4 mr-2" />
-                      Settings
                     </Link>
                     <button
                       onClick={async () => {
@@ -113,49 +113,54 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Icons */}
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden flex items-center gap-2">
-            <button onClick={toggleMenu} className="p-2">
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-transform duration-300 transform hover:scale-105 shadow-sm"
+            >
+              {isOpen ? (
+                <X className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+              ) : (
+                <Menu className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+              )}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden px-4 pt-3 pb-4 space-y-2">
-            {['/', '/auction', '/about'].map((path, idx) => (
-              <Link
-                key={idx}
-                href={path}
-                className="block px-3 py-2 text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-              >
-                {path === '/' ? 'Home' : path.replace('/', '').charAt(0).toUpperCase() + path.slice(2)}
+          <div className="md:hidden bg-white dark:bg-gray-900 shadow-md rounded-b-xl px-6 py-6 space-y-6 flex flex-col items-center">
+            <div className="flex flex-col items-start w-full gap-4">
+              <Link href="/" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                <Home className="h-5 w-5" /> Home
               </Link>
-            ))}
 
-            <div className="flex items-center gap-2 mt-3">
+              <Link href="/Category" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                <Gavel className="h-5 w-5" /> Auction
+              </Link>
+
+              <Link href="/about" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                <Info className="h-5 w-5" /> About
+              </Link>
+            </div>
+
+            <div className="w-full space-y-3 pt-2">
               {!user ? (
                 <>
                   <Link href="/login">
-                    <button className="px-3 py-1 border border-gray-300 rounded-md text-sm dark:border-gray-600">
+                    <button onClick={closeMenu} className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700">
                       Login
                     </button>
                   </Link>
                   <Link href="/register">
-                    <button className="px-3 py-1 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700">
+                    <button onClick={closeMenu} className="w-full mt-1.5 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                       Sign Up
                     </button>
                   </Link>
                 </>
               ) : (
-                <button
-                  onClick={async () => {
-                    await logout();
-                    router.push('/');
-                  }}
-                  className="px-3 py-2 rounded-md bg-red-500 text-white text-sm hover:bg-red-600 mt-2"
-                >
+                <button onClick={async () => { await logout(); closeMenu(); router.push('/'); }} className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
                   Logout
                 </button>
               )}
@@ -166,12 +171,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-
-
-
-
-
-
-
-

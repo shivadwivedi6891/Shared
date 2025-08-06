@@ -10,6 +10,8 @@ const vehiclesData = [
   {
     id: 1,
     name: 'BMW M5',
+    brand: 'BMW',
+    category: 'Car',
     number: 'NL01AA9365',
     image: 'https://news.dupontregistry.com/wp-content/uploads/2022/09/2022-bmw-m5-cs-1.jpg',
     state: 'Delhi',
@@ -21,7 +23,6 @@ const vehiclesData = [
       'https://th.bing.com/th/id/OIP.y0t8TF7rcnTidXQ3xjY4EQHaEK?w=265&h=180&c=7&r=0&o=7&dpr=1.7&pid=1.7&rm=3',
       'https://th.bing.com/th/id/OIP.AEzARprGIBMBFT3E9JpSswHaEu?w=271&h=180&c=7&r=0&o=7&dpr=1.7&pid=1.7&rm=3',
       'https://th.bing.com/th/id/OIP.LMk9vvk9EXDYhaaipCbmjAHaDV?w=295&h=180&c=7&r=0&o=7&dpr=1.7&pid=1.7&rm=3',
-
     ],
     fuel: 'Petrol',
     registration: 'DL01BM1234',
@@ -36,6 +37,8 @@ const vehiclesData = [
   {
     id: 2,
     name: 'Mercedes 2518',
+    brand: 'Mercedes',
+    category: 'Lot',
     number: 'TN18AV4185',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPF93lDlRe4ektKrTnEguHYykeFXuXwyjzXw&s',
     state: 'Tamil Nadu',
@@ -60,18 +63,18 @@ const vehiclesData = [
   },
   {
     id: 3,
-    name: 'Audi R8',
+    name: 'Harley davidson',
+    brand: 'Harley',
+    category: 'Two Wheeler',
     number: 'BR06GF2371',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4iaxyNoXdZK8JYyLN5HygkEF0Eats_IZE9w&s',
+    image: 'https://tse1.mm.bing.net/th/id/OIP.IY0U2CXbdMz99gWRduvGcAHaEK?pid=Api&P=0&h=180',
     state: 'Bihar',
     city: 'Patna',
     chassis: 'Dumper',
     year: '2021',
-    images: [
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4iaxyNoXdZK8JYyLN5HygkEF0Eats_IZE9w&s',
-      'https://tse3.mm.bing.net/th/id/OIP.0sY3gsMgyzIY25MVGn-48gHaFj?pid=Api&P=0&h=180',
-      'https://tse4.mm.bing.net/th/id/OIP.PxI_45b_yzcSk7ttii4m6AHaE8?pid=Api&P=0&h=180',
-      'https://tse1.mm.bing.net/th/id/OIP.sH5TZe6kKX_RA5KauuC1sQHaE8?pid=Api&P=0&h=180',
+    images: ['https://tse4.mm.bing.net/th/id/OIP.1_NEjpJtaVlhlwt9CBbsCgHaEK?pid=Api&P=0&h=180','https://tse2.mm.bing.net/th/id/OIP.Pq1Vc6MzI0jZQXT9j8yMUwHaEJ?pid=Api&P=0&h=180',
+      'https://tse2.mm.bing.net/th/id/OIP.ipmTQXAMc81wnlKDPrQImAHaEd?pid=Api&P=0&h=180'
+   
     ],
     fuel: 'Diesel',
     registration: 'BR06GF2371',
@@ -85,16 +88,16 @@ const vehiclesData = [
   },
 ];
 
+
 const states = ['All', 'Delhi', 'Tamil Nadu', 'Bihar'];
-const cities = ['All', 'New Delhi', 'Chennai', 'Patna'];
-const chassisOptions = ['All', 'Sedan', 'Truck', 'Dumper'];
-const years = ['All', '2020', '2021', '2023'];
+const brands = ['All', 'BMW', 'Mercedes', 'harley'];
+const categories = ['All', 'Two Wheeler', 'Car', 'Lot'];
 
 export default function AuctionPage() {
   const router = useRouter();
   const { user } = useAuth();
 
-  const [filters, setFilters] = useState({ state: 'All', city: 'All', chassis: 'All', year: 'All' });
+  const [filters, setFilters] = useState({ state: 'All', brand: 'All', category: 'All' });
   const [bids, setBids] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
@@ -103,8 +106,15 @@ export default function AuctionPage() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [bidVehicle, setBidVehicle] = useState(null);
 
-  const handleInputChange = (id, field, value) => {
-    setBids(prev => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
+  const getMinIncrement = (category) => {
+    if (category === 'Two Wheeler') return 2000;
+    if (category === 'Car') return 5000;
+    if (category === 'Lot') return 10000;
+    return 1000;
+  };
+
+  const isValidBid = (amount, startingBid, increment) => {
+    return amount > startingBid && (amount - startingBid) % increment === 0;
   };
 
   const openConfirmModal = (vehicle) => {
@@ -122,20 +132,19 @@ export default function AuctionPage() {
 
   const filteredVehicles = vehiclesData.filter(vehicle =>
     (filters.state === 'All' || vehicle.state === filters.state) &&
-    (filters.city === 'All' || vehicle.city === filters.city) &&
-    (filters.chassis === 'All' || vehicle.chassis === filters.chassis) &&
-    (filters.year === 'All' || vehicle.year === filters.year)
+    (filters.brand === 'All' || vehicle.brand === filters.brand) &&
+    (filters.category === 'All' || vehicle.category === filters.category)
   );
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-6 text-gray-900 dark:text-white">
       <h1 className="text-4xl font-bold text-center mb-10">Vehicle Auction Listings</h1>
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Sidebar */}
         <aside className="w-full lg:w-64 bg-white dark:bg-white/5 border dark:border-white/10 rounded-xl p-6 shadow space-y-6">
           {[{ label: 'State', options: states, key: 'state' },
-            { label: 'City', options: cities, key: 'city' },
-            { label: 'Chassis', options: chassisOptions, key: 'chassis' },
-            { label: 'Year', options: years, key: 'year' }
+            { label: 'Brand', options: brands, key: 'brand' },
+            { label: 'Category', options: categories, key: 'category' }
           ].map(({ label, options, key }) => (
             <div key={key}>
               <label className="block text-sm font-medium mb-1">{label}</label>
@@ -148,6 +157,13 @@ export default function AuctionPage() {
               </select>
             </div>
           ))}
+
+          <button
+            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+            onClick={() => setFilters({ state: 'All', brand: 'All', category: 'All' })}
+          >
+            Reset Filters
+          </button>
         </aside>
 
         <main className="flex-1 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -157,21 +173,15 @@ export default function AuctionPage() {
             </p>
           )}
 
-          {filteredVehicles.map(vehicle => {
-            const bid = bids[vehicle.id] || {};
-            const isBidValid = bid.amount > vehicle.startingBid && bid.agree;
+          {filteredVehicles.map((vehicle, index) => {
+            const increment = getMinIncrement(vehicle.category);
+            const currentBid = bids[vehicle.id]?.amount ?? vehicle.startingBid;
+            const agreed = bids[vehicle.id]?.agree ?? false;
+            const isBidValid = isValidBid(currentBid, vehicle.startingBid, increment) && agreed;
 
             return (
-              <div
-                key={vehicle.id}
-                className="bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 shadow-xl p-5 hover:scale-[1.02] transition"
-              >
-                <img
-                  src={vehicle.image}
-                  alt={vehicle.name}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
-                />
-
+              <div key={vehicle.id} className="bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 shadow-xl p-5 hover:scale-[1.02] transition">
+                <img src={vehicle.image} alt={vehicle.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                 <h2 className="text-lg font-bold">{vehicle.name}</h2>
                 <p className="text-blue-600 dark:text-blue-400">{vehicle.number}</p>
 
@@ -192,25 +202,64 @@ export default function AuctionPage() {
                 </div>
 
                 <div className='flex gap-1'>
-                  <h2>Current car price</h2>
+                  <h2>Rank:</h2>
                   <p className="text-lg font-semibold text-center text-green-600 dark:text-green-400">
-                    ₹{vehicle.startingBid.toLocaleString()}
+                    {index + 1}
                   </p>
                 </div>
 
-                <input
-                  type="number"
-                  placeholder="Enter your bid"
-                  value={bid.amount ?? ''}
-                  onChange={e => handleInputChange(vehicle.id, 'amount', Number(e.target.value))}
-                  className="w-full mt-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                />
+                {/* Bid Controls */}
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                  <span className="text-sm font-medium">Your Bid:</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() =>
+                        setBids(prev => {
+                          const prevAmount = prev[vehicle.id]?.amount ?? vehicle.startingBid;
+                          const newAmount = Math.max(vehicle.startingBid, prevAmount - increment);
+                          return {
+                            ...prev,
+                            [vehicle.id]: {
+                              ...prev[vehicle.id],
+                              amount: newAmount
+                            }
+                          };
+                        })
+                      }
+                      className="w-7 h-7 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      –
+                    </button>
+                    <span className="px-2 text-sm font-semibold text-blue-700 dark:text-blue-300">
+                      ₹{currentBid.toLocaleString()}
+                    </span>
+                    <button
+                      onClick={() =>
+                        setBids(prev => ({
+                          ...prev,
+                          [vehicle.id]: {
+                            ...prev[vehicle.id],
+                            amount: (prev[vehicle.id]?.amount ?? vehicle.startingBid) + increment
+                          }
+                        }))
+                      }
+                      className="w-7 h-7 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
 
                 <label className="flex items-center mt-2 text-sm">
                   <input
                     type="checkbox"
-                    checked={bid.agree ?? false}
-                    onChange={e => handleInputChange(vehicle.id, 'agree', e.target.checked)}
+                    checked={agreed}
+                    onChange={e =>
+                      setBids(prev => ({
+                        ...prev,
+                        [vehicle.id]: { ...prev[vehicle.id], agree: e.target.checked, amount: currentBid }
+                      }))
+                    }
                     className="mr-2"
                   />
                   I Agree to
@@ -233,20 +282,29 @@ export default function AuctionPage() {
                         router.push('/login');
                         return;
                       }
+
                       const isPremium = localStorage.getItem('premium_done') === 'true';
                       if (!isPremium) {
-                        alert('⚠️ You must complete Premium Membership to place bids.');
+                        alert('⚠ You must complete Premium Membership to place bids.');
                         router.push('/dashboard/buyer');
                         return;
                       }
-                      if (isBidValid) openConfirmModal(vehicle);
+
+                      `const bidCountKey = user_bid_count_${user.id}`;
+                      const currentBidCount = parseInt(localStorage.getItem(bidCountKey)) || 0;
+
+                      if (currentBidCount >= 10) {
+                        alert('⚠ You have reached the maximum limit of 10 bids.');
+                        return;
+                      }
+
+                      if (isBidValid) {
+                        localStorage.setItem(bidCountKey, currentBidCount + 1);
+                        openConfirmModal(vehicle);
+                      }
                     }}
                     disabled={!isBidValid}
-                    className={`flex-1 py-2 rounded-lg text-white ${
-                      isBidValid
-                        ? 'bg-blue-600 hover:bg-blue-700'
-                        : 'bg-blue-300 cursor-not-allowed'
-                    }`}
+                    className={`flex-1 py-2 rounded-lg text-white ${isBidValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed'}`}
                   >
                     Place Bid
                   </button>
@@ -257,14 +315,13 @@ export default function AuctionPage() {
         </main>
       </div>
 
+      {/* Modals */}
       {isModalOpen && selectedCar && (
         <CarBidModal car={selectedCar} initialTab={activeTab} onClose={() => setModalOpen(false)} />
       )}
-
       {termsModalOpen && (
         <TermsConditionModal onClose={() => setTermsModalOpen(false)} />
       )}
-
       {confirmModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-sm shadow-lg">
@@ -295,10 +352,3 @@ export default function AuctionPage() {
     </div>
   );
 }
-
-
-
-
-
-
-

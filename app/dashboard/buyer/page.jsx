@@ -18,13 +18,13 @@ export default function BuyerDashboard() {
   const [myBids, setMyBids] = useState([]);
   const [isKycOpen, setIsKycOpen] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const wonAuctions = [
     {
       id: 1,
       carName: '2018 McLaren 570S',
-      image:
-        'https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg',
+      image: 'https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg',
       winningBid: 175000,
       status: 'payment_pending',
     },
@@ -34,8 +34,7 @@ export default function BuyerDashboard() {
     {
       id: 1,
       carName: '2022 BMW M3',
-      image:
-        'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg',
+      image: 'https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg',
       currentBid: 72000,
       timeLeft: '5d 12h 20m',
     },
@@ -57,12 +56,8 @@ export default function BuyerDashboard() {
   useEffect(() => {
     const kycDone = localStorage.getItem('kyc_done');
     const premiumDone = localStorage.getItem('premium_done');
-
-    if (!kycDone) {
-      setIsKycOpen(true);
-    } else if (!premiumDone) {
-      setShowPremiumModal(true);
-    }
+    if (!kycDone) setIsKycOpen(true);
+    else if (!premiumDone) setShowPremiumModal(true);
   }, []);
 
   const handleKYCComplete = () => {
@@ -80,11 +75,7 @@ export default function BuyerDashboard() {
       const bidsFromStorage = localStorage.getItem('myBids');
       if (bidsFromStorage) {
         const parsedBids = JSON.parse(bidsFromStorage);
-        if (Array.isArray(parsedBids)) {
-          setMyBids(parsedBids);
-        } else {
-          setMyBids([]);
-        }
+        setMyBids(Array.isArray(parsedBids) ? parsedBids : []);
       } else {
         setMyBids([]);
       }
@@ -99,7 +90,7 @@ export default function BuyerDashboard() {
       {isKycOpen && <KYCModal isOpen={isKycOpen} onClose={handleKYCComplete} />}
       {showPremiumModal && <PremiumModal onClose={handlePremiumClose} />}
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -111,7 +102,6 @@ export default function BuyerDashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-         
             <StatCard icon={<Gavel />} label="Active Bids" value={myBids.length} color="blue" />
             <StatCard icon={<Trophy />} label="Won Auctions" value={wonAuctions.length} color="green" />
             <StatCard icon={<Heart />} label="Watching" value={watchingList.length} color="red" />
@@ -119,7 +109,6 @@ export default function BuyerDashboard() {
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-         
             <div className="border-b border-gray-200 dark:border-gray-700">
               <nav className="flex space-x-8 px-6">
                 {['bids', 'won', 'watching'].map((tab) => (
@@ -139,32 +128,94 @@ export default function BuyerDashboard() {
             </div>
 
             <div className="p-6">
-              {activeTab === 'bids' && (
-                myBids.length > 0 ? myBids.map((bid) => (
-                  <BidCard bid={bid} statusColor={getStatusColor(bid.status)} key={bid.id} />
-                )) : (
+              {activeTab === 'bids' &&
+                (myBids.length > 0 ? (
+                  myBids.map((bid) => (
+                    <BidCard bid={bid} statusColor={getStatusColor(bid.status)} key={bid.id} />
+                  ))
+                ) : (
                   <p className="text-gray-600 dark:text-gray-300">You have no active bids.</p>
-                )
-              )}
+                ))}
 
-              {activeTab === 'won' && (
+              {activeTab === 'won' &&
                 wonAuctions.map((auction) => (
                   <AuctionCard auction={auction} key={auction.id} statusColor={getStatusColor(auction.status)} />
-                ))
-              )}
+                ))}
 
-              {activeTab === 'watching' && (
-                watchingList.map((car) => (
-                  <WatchingCard car={car} key={car.id} />
-                ))
-              )}
+              {activeTab === 'watching' &&
+                watchingList.map((car) => <WatchingCard car={car} key={car.id} />)}
             </div>
+          </div>
+
+          {/* Toggle Button and Form */}
+          <div className="mt-10 max-w-xl mx-auto">
+            <button
+              onClick={() => setShowChangePassword((prev) => !prev)}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              {showChangePassword ? 'Hide Change Password' : 'Change Password'}
+            </button>
+
+            {showChangePassword && (
+              <div className="mt-4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Change Password</h2>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    alert('Password changed successfully!');
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Current Password
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Confirm New Password
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm sm:text-sm"
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      Change
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </PrivateRoute>
   );
 }
+
+// Reusable Components
+
 function StatCard({ icon, label, value, color }) {
   const bg = {
     blue: 'bg-blue-100 dark:bg-blue-900',
@@ -199,7 +250,7 @@ function BidCard({ bid, statusColor }) {
       <img src={bid.image} alt={bid.carName} className="w-20 h-20 rounded-lg object-cover" />
       <div className="flex-1">
         <h3 className="font-semibold text-lg dark:text-white">{bid.carName}</h3>
-        <p className="text-gray-600 dark:text-gray-300">Your bid: ${bid.bidAmount.toLocaleString()}</p>
+        <p className="text-gray-600 dark:text-gray-300">Your bid: ${bid.bidAmount?.toLocaleString()}</p>
         <div className="flex items-center space-x-4 mt-2">
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
             {bid.status === 'leading' ? 'Leading' : 'Outbid'}
@@ -255,4 +306,3 @@ function WatchingCard({ car }) {
     </div>
   );
 }
-

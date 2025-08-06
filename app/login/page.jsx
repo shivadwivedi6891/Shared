@@ -19,6 +19,10 @@ export default function LoginPage() {
     userType: 'buyer',
   });
 
+  const [otpSent, setOtpSent] = useState(false);
+  const [resendDisabled, setResendDisabled] = useState(true);
+  const [timer, setTimer] = useState(0);
+
   const router = useRouter();
   const { login } = useAuth();
 
@@ -26,13 +30,24 @@ export default function LoginPage() {
     loadCaptchaEnginge(6);
   }, []);
 
-  // ✅ Fix: check localStorage in useEffect only (runs in browser)
   useEffect(() => {
     const token = localStorage.getItem('user');
     if (token) {
       router.push(`/dashboard/buyer`);
     }
   }, []);
+
+  useEffect(() => {
+    let countdown;
+    if (timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0 && otpSent) {
+      setResendDisabled(false);
+    }
+    return () => clearInterval(countdown);
+  }, [timer, otpSent]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,12 +75,26 @@ export default function LoginPage() {
       alert('Please enter a valid 10-digit phone number.');
       return;
     }
+
     alert(`Your OTP has been sent to +91-${formData.phone}`);
+    setOtpSent(true);
+    setResendDisabled(false);
+  };
+
+  const handleResendOtp = () => {
+    if (!formData.phone.match(/^\d{10}$/)) {
+      alert('Please enter a valid 10-digit phone number to resend OTP.');
+      return;
+    }
+
+    alert(`OTP resent to +91-${formData.phone}`);
+    setResendDisabled(true);
+    setTimer(60);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:via-black dark:to-gray-800 text-black dark:text-white px-4 py-8">
-      <div className="w-full max-w-sm bg-white/50 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-300 dark:border-gray-700 space-y-5">
+      <div className="w-full max-w-md bg-white/50 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-300 dark:border-gray-700 space-y-5">
         <div className="text-center">
           <Car className="mx-auto h-8 w-8 text-white p-2 bg-gradient-to-r from-blue-500 to-fuchsia-500 rounded-full shadow-lg animate-pulse" />
           <h1 className="mt-4 text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -76,25 +105,40 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              required
-              pattern="[0-9]{10}"
-              maxLength={10}
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              placeholder="Enter 10-digit phone"
-              className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
-            />
+            <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">Mobile Number</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="Mobile"
+                inputMode="numeric"
+                required
+                maxLength={10}
+                value={formData.phone}
+                onChange={(e) => {
+                  const onlyNums = e.target.value.replace(/[^0-9]/g, '');
+                  setFormData({ ...formData, phone: onlyNums });
+                }}
+                placeholder="Enter 10-digit phone"
+                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
+              />
+              <button
+                type="button"
+                disabled={otpSent}
+                onClick={handleSendOtp}
+                className={`px-3 py-2 text-xs rounded-xl transition-transform shadow 
+                  ${otpSent
+                    ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105'
+                  }`}
+              >
+                Send OTP
+              </button>
+            </div>
           </div>
 
           <div>
             <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">OTP</label>
-            <div className="flex items-center gap-2">
+            <div className="flex gap-2">
               <input
                 type="text"
                 name="otp"
@@ -114,10 +158,15 @@ export default function LoginPage() {
               />
               <button
                 type="button"
-                onClick={handleSendOtp}
-                className="px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-xl hover:scale-105 transition-transform shadow"
+                disabled={resendDisabled}
+                onClick={handleResendOtp}
+                className={`px-3 py-2 text-xs rounded-xl transition-transform shadow 
+                  ${resendDisabled
+                    ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:scale-105'
+                  }`}
               >
-                Send OTP
+                {timer > 0 ? `Resend in ${timer}s` : 'Resend OTP'}
               </button>
             </div>
           </div>
@@ -155,9 +204,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-
-
-
-
-

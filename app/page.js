@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
@@ -59,16 +60,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section Below Slider (New Content) */}
+      {/* Section Below Slider (New Content)
       <section className="text-center py-12 px-4 bg-gradient-to-b from-white to-blue-50">
-        {/* Stats */}
+  
         <div className="flex flex-col md:flex-row justify-center items-center gap-50 text-blue-800 font-semibold text-lg">
           <div><span className="text-4xl font-bold">5356</span><br />USERS ONLINE</div>
           <div><span className="text-4xl font-bold">1</span><br />VEHICLES ONLINE</div>
           <div><span className="text-4xl font-bold">1</span><br />AUCTIONS ONLINE</div>
         </div>
 
-        {/* Search */}
+   
         <div className="mt-8 max-w-3xl mx-auto">
           <label className="block text-xl font-bold text-left mb-2">FIND VEHICLES</label>
           <input
@@ -78,7 +79,7 @@ export default function HomePage() {
           />
         </div>
 
-        {/* State Filters */}
+ 
         <h2 className="text-3xl font-semibold mt-12 mb-6">Ongoing Auctions</h2>
         <div className="flex justify-center flex-wrap gap-4 mb-10">
           {['MH', 'AP', 'TS', 'AR', 'AS', 'BR', 'CG', 'GA', 'More'].map((state, i) => (
@@ -91,7 +92,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Auction Card */}
+      
         <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden">
           <div className="flex flex-col md:flex-row gap-4 p-6">
             <img
@@ -134,7 +135,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }

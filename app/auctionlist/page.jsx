@@ -290,7 +290,7 @@ export default function AuctionPage() {
                         return;
                       }
 
-                      `const bidCountKey = user_bid_count_${user.id}`;
+                      const bidCountKey = `user_bid_count_${user.id}`;
                       const currentBidCount = parseInt(localStorage.getItem(bidCountKey)) || 0;
 
                       if (currentBidCount >= 10) {

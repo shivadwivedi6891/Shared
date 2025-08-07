@@ -20,8 +20,8 @@ export default function CarDetailPage() {
         setError('Failed to load car.');
       }
     };
-
     if (id) fetchCar();
+
   }, [id]);
 
   if (error)

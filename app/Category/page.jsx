@@ -4,18 +4,18 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const categories = [
-  { name: 'Car', icon: '🚗' },
-  { name: 'HCV/LCV', icon: '🚛' },
-  { name: 'Construction Equipment’s', icon: '🏗️' },
-  { name: 'Tractors', icon: '🚜' },
-  { name: 'Bike/2 Wheelers', icon: '🏍️' },
+  { name: 'Car', icon: '🚗', slug: 'car' },
+  { name: 'HCV/LCV', icon: '🚛', slug: 'hcv-lcv' },
+  { name: 'Construction Equipment’s', icon: '🏗️', slug: 'construction-equipments' },
+  { name: 'Tractors', icon: '🚜', slug: 'tractors' },
+  { name: 'Bike/2 Wheelers', icon: '🏍️', slug: 'bike-2-wheelers' },
 ];
 
 export default function CategoryPage() {
   const router = useRouter();
 
-  const handleCategoryClick = (category) => {
-    router.push(`/auction?category=${encodeURIComponent(category)}`);
+  const handleCategoryClick = (slug) => {
+    router.push(`/auction?category=${slug}`);
   };
 
   return (
@@ -32,13 +32,13 @@ export default function CategoryPage() {
         {categories.map((cat) => (
           <div
             key={cat.name}
-            onClick={() => handleCategoryClick(cat.name)}
-            className="w-52 h-52 bg-white rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform flex flex-col items-center justify-center text-blue-900"
-          >
+            onClick={() => handleCategoryClick(cat.slug)}
+            className="w-52 h-52 bg-white rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform flex flex-col items-center justify-center text-blue-900">
             <div className="text-5xl mb-4">{cat.icon}</div>
             <p className="text-lg font-semibold text-center">{cat.name}</p>
           </div>
         ))}
+
       </div>
 
       {/* Extra Content Section */}
@@ -69,5 +69,3 @@ export default function CategoryPage() {
     </div>
   );
 }
-
-

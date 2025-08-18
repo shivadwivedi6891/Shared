@@ -12,8 +12,9 @@ import KYCModal from '@/components/kycModel';
 import PremiumModal from '@/components/premiumModal';
 
 export default function BuyerDashboard() {
+
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, kyc } = useAuth();
   const [activeTab, setActiveTab] = useState('bids');
   const [myBids, setMyBids] = useState([]);
   const [isKycOpen, setIsKycOpen] = useState(false);
@@ -40,6 +41,46 @@ export default function BuyerDashboard() {
     },
   ];
 
+
+
+  
+ const [subscription, setSubscription] = useState(false);
+
+  // ✅ Load subscription status from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('subscription');
+      console.log('Loaded subscription status:', stored);
+      setSubscription(stored === 'true'); // ensures boolean
+    }
+  }, []);
+
+
+
+
+  //  useEffect(() => {
+  //   if (!kyc) {
+  //     setIsKycOpen(true);
+  //   } else if (!subscription) {
+  //     setShowPremiumModal(true);
+  //   }
+  // }, [kyc, subscription]);
+
+  useEffect(() => {
+  if (kyc === false || kyc === null) {
+    setIsKycOpen(true); // open modal if KYC not complete
+  } else if (!subscription) {
+    setShowPremiumModal(true);
+  }
+}, [kyc, subscription]);
+
+  const handleKYCComplete = () => {
+    setIsKycOpen(false);
+    if (!subscription) {
+      setTimeout(() => setShowPremiumModal(true), 300);
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'leading':
@@ -51,23 +92,6 @@ export default function BuyerDashboard() {
       default:
         return 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100';
     }
-  };
-
-  useEffect(() => {
-    const kycDone = localStorage.getItem('kyc_done');
-    const premiumDone = localStorage.getItem('premium_done');
-    if (!kycDone) setIsKycOpen(true);
-    else if (!premiumDone) setShowPremiumModal(true);
-  }, []);
-
-  const handleKYCComplete = () => {
-    setIsKycOpen(false);
-    setTimeout(() => setShowPremiumModal(true), 300);
-  };
-
-  const handlePremiumClose = () => {
-    setShowPremiumModal(false);
-    localStorage.setItem('premium_done', 'true');
   };
 
   useEffect(() => {
@@ -83,18 +107,21 @@ export default function BuyerDashboard() {
       console.error('Error parsing bids from localStorage', error);
       setMyBids([]);
     }
-  }, []);
+  }, []);const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+
+if (!mounted) return null; // or a safe SSR placeholder
 
   return (
     <PrivateRoute>
-      {isKycOpen && <KYCModal isOpen={isKycOpen} onClose={handleKYCComplete} />}
-      {showPremiumModal && <PremiumModal onClose={handlePremiumClose} />}
+      <KYCModal open={isKycOpen} onClose={handleKYCComplete} />
+      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Welcome, {user?.name || 'User'}!
+              Welcome, {user?.name || user?.fullName || 'User'}!
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
               Manage your bids and track your auction activity
@@ -215,7 +242,6 @@ export default function BuyerDashboard() {
 }
 
 // Reusable Components
-
 function StatCard({ icon, label, value, color }) {
   const bg = {
     blue: 'bg-blue-100 dark:bg-blue-900',

@@ -29,6 +29,12 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
+ 
+
+if (!mounted) {
+  return null; // prevents SSR/client mismatch
+}
+
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const closeMenu = () => setIsOpen(false);

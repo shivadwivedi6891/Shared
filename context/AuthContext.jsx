@@ -1,39 +1,108 @@
-'use client';
+"use client";
+import React, { createContext, useState, useContext } from "react";
 
-import { Router } from 'next/router';
-import { createContext, useContext, useEffect, useState } from 'react';
-
-const AuthContext = createContext(undefined);
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const [user, setUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
     }
-  }, []);
+    return null;
+  });
 
-  const login = (user) => {
-    setUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
-  };
+  const [token, setToken] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token") || null;
+    }
+    return null;
+  });
 
-  const completeKYC = () => {
-    if (!user) return;
-    const updatedUser = { ...user, kycCompleted: true };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-  };
+ 
+  const [kyc, setKyc] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedKyc = localStorage.getItem("kyc");
+      return storedKyc ? JSON.parse(storedKyc) : null;
+    }
+    return null;
+  });
+
+
+
+  const updateKyc = (newKyc) => {
+  setKyc(newKyc);
+  const isKycComplete =
+    newKyc &&
+    Number(newKyc.aadhaarStatus) === 1 &&
+    Number(newKyc.panStatus) === 1;
+
+  localStorage.setItem("kyc", JSON.stringify(isKycComplete));
+};
+
+  const [subscription, setSubscription] = useState(() => {
+  if (typeof window !== "undefined") {
+    const storedSubscription = localStorage.getItem("subscription");
+    return storedSubscription ? JSON.parse(storedSubscription) : null;
+  }
+  return null;
+});
+
+  const [loading, setLoading] = useState(false);
+
+
+
+
+
+  const login = (loginResponse) => {
+
+    
+
+  const { user, token, kyc, subscription } = loginResponse;
+
+
+  console.log("KYC from response:", kyc);
+console.log("aadhaarStatus type and value:", typeof kyc?.aadhaarStatus, kyc?.aadhaarStatus);
+console.log("panStatus type and value:", typeof kyc?.panStatus, kyc?.panStatus);
+
+const isKycComplete =
+  kyc &&
+  kyc.aadhaarStatus === 1 &&
+  kyc.panStatus === 1;
+
+console.log("Is KYC Complete?", isKycComplete);
+
+
+  setUser(user);
+  setToken(token);
+  setKyc(kyc || null);
+  setSubscription(subscription || null);
+
+
+
+  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("token", token);
+  localStorage.setItem("kyc", isKycComplete ? "true" : "false");
+  localStorage.setItem("subscription", JSON.stringify(subscription || null));
+};
+
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    setToken(null);
+    setKyc(null);
+    setSubscription(null);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("kyc");
+    localStorage.removeItem("subscription");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, completeKYC }}>
+    <AuthContext.Provider
+      value={{ user, token, kyc, login, updateKyc, logout, loading, setLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -41,6 +110,8 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 };

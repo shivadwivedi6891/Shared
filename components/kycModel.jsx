@@ -12,6 +12,7 @@ import { getUserKyc, submitKyc, uploadKycFile } from "@/services/AuthServices/Au
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
   const { updateKyc } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -117,8 +118,8 @@ export default function KYCModal() {
       const data = await submitKyc(submitBody);
 
       if (data?.success) {
-        updateKyc(true);
-        localStorage.setItem("kyc", "true");
+        // updateKyc(true);
+        // localStorage.setItem("kyc", "true");
         // message.success("KYC submitted successfully!");
         console.log(data);
         setIsOpen(false); // ✅ close modal after success
@@ -132,7 +133,18 @@ export default function KYCModal() {
   };
 
   useEffect(() => {
+
+
     const checkKYC = async () => {
+
+       const user = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+
+    if (!user) {
+      setIsOpen(false);
+      return;
+    }
       try {
         const res = await getUserKyc();
         const kycData = res?.data?.data;
@@ -149,7 +161,7 @@ export default function KYCModal() {
     };
 
     checkKYC();
-  }, []);
+  }, [user]);
 
   if (!isOpen) return null;
 

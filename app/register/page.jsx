@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Car, RefreshCcw } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import {
   LoadCanvasTemplate,
   loadCaptchaEnginge,
@@ -60,9 +61,18 @@ export default function RegisterPage() {
   const [resendTimer, setResendTimer] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { user } = useAuth();
+
   useEffect(() => {
     loadCaptchaEnginge(6);
   }, []);
+
+    useEffect(() => {
+  if (user) {
+    router.push('/dashboard/buyer');          
+  }
+}, [user]);
+  
 
   useEffect(() => {
     let timer;

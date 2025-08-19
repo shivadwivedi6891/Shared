@@ -21,7 +21,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  // const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -104,18 +104,20 @@ if (!mounted) {
                 )}
               </div>
             ) : (
-              <>
-                <Link href="/login">
-                  <button className="px-4 py-2 border bg-amber-400 border-gray-300 rounded-md hover:bg-blue-50 dark:hover:bg-gray-700 transition-all">
-                    Login
-                  </button>
-                </Link>
-                <Link href="/register">
-                  <button className="px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all shadow-md">
-                    Sign Up
-                  </button>
-                </Link>
-              </>
+           <>
+  <Link href="/login">
+    <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md hover:from-amber-500 hover:to-orange-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+      Login
+    </button>
+  </Link>
+
+  <Link href="/register">
+    <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-md hover:from-blue-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+      Sign Up
+    </button>
+  </Link>
+</>
+
             )}
           </div>
 

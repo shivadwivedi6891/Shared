@@ -66,20 +66,20 @@ export default function BuyerDashboard() {
   //   }
   // }, [kyc, subscription]);
 
-  useEffect(() => {
-  if (kyc === false || kyc === null) {
-    setIsKycOpen(true); // open modal if KYC not complete
-  } else if (!subscription) {
-    setShowPremiumModal(true);
-  }
-}, [kyc, subscription]);
+//   useEffect(() => {
+//   if (kyc === false || kyc === null) {
+//     setIsKycOpen(true); // open modal if KYC not complete
+//   } else if (!subscription) {
+//     setShowPremiumModal(true);
+//   }
+// }, [kyc, subscription]);
 
-  const handleKYCComplete = () => {
-    setIsKycOpen(false);
-    if (!subscription) {
-      setTimeout(() => setShowPremiumModal(true), 300);
-    }
-  };
+//   const handleKYCComplete = () => {
+//     setIsKycOpen(false);
+//     if (!subscription) {
+//       setTimeout(() => setShowPremiumModal(true), 300);
+//     }
+//   };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -114,8 +114,8 @@ if (!mounted) return null; // or a safe SSR placeholder
 
   return (
     <PrivateRoute>
-      <KYCModal open={isKycOpen} onClose={handleKYCComplete} />
-      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
+      {/* <KYCModal open={isKycOpen} onClose={handleKYCComplete} />
+      <PremiumModal open={showPremiumModal} onClose={() => setShowPremiumModal(false)} /> */}
 
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

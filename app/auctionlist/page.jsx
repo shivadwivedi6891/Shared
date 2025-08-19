@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import CarBidModal from '@/components/carbidmodal';
 import TermsConditionModal from '@/components/termsconditionModal';
+import Link from 'next/link';
 
 const vehiclesData = [
   {
@@ -159,7 +160,7 @@ export default function AuctionPage() {
           ))}
 
           <button
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+            className="w-full bg-red-500 hover:bg-green-500 text-white py-2 rounded-lg"
             onClick={() => setFilters({ state: 'All', brand: 'All', category: 'All' })}
           >
             Reset Filters
@@ -186,7 +187,7 @@ export default function AuctionPage() {
                 <p className="text-blue-600 dark:text-blue-400">{vehicle.number}</p>
 
                 <div className="flex flex-wrap gap-2 my-2">
-                  {['Gallery', 'Vehicle Details', 'Evaluation Report'].map(tab => (
+                  {['Gallery', 'Vehicle Details','Other Details','Evaluation Report'].map(tab => (
                     <button
                       key={tab}
                       onClick={() => {
@@ -351,4 +352,5 @@ export default function AuctionPage() {
       )}
     </div>
   );
+
 }

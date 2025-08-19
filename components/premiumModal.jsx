@@ -1,23 +1,16 @@
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CheckCircle } from "lucide-react";
-import { getUserKyc, getUserSubscriptions } from "@/services/AuthServices/AuthApiFunction"; // ✅ Import your API function
+import { getUserKyc, getUserSubscriptions } from "@/services/AuthServices/AuthApiFunction";
 
 export default function PremiumModal() {
   const [step, setStep] = useState("plans");
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [isSubscribed, setIsSubscribed] = useState(true); // default true so modal doesn’t flash
   const [open, setOpen] = useState(false);
-
+  const pathname = usePathname();
   const router = useRouter();
-  
-
-
 
   const plans = [
     { name: "Premium", price: "₹999 / Year", id: "premium", numericAmount: 999 },
@@ -26,63 +19,70 @@ export default function PremiumModal() {
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
     localStorage.setItem("selected_plan", JSON.stringify(plan));
-    router.push("/BankAccount");
+    router.push("/BankAccount"); 
   };
 
-
-useEffect(() => {
-
-
   const checkSubscription = async () => {
+    const user = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
 
-      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-      if(!user) {
-        setOpen(false);
-        return
-      }
+    if (!user) {
+      setOpen(false);
+      return;
+    }
+
     try {
-      // 1️ Check KYC first
-      const kycRes = await getUserKyc(); // your API function for KYC
+      // 1. Check KYC
+      const kycRes = await getUserKyc();
+      console.log("KYC Response:", kycRes);
       const kycData = kycRes?.data?.data;
 
       if (!kycData || kycData.aadhaarStatus !== 1 || kycData.panStatus !== 1) {
-        // ❌ KYC incomplete — don't show premium modal
         setOpen(false);
         return;
       }
 
-      // 2 Now check subscription
+      // 2. Check subscription
       const res = await getUserSubscriptions();
       const subscriptionList = res?.data?.data || [];
-      console.log("Subscription list:", subscriptionList);
+      console.log("Subscription List:", subscriptionList);
 
       if (subscriptionList.length === 0) {
-        setIsSubscribed(false);
         setOpen(true);
       } else {
         const subscriptionData = subscriptionList[0];
-        const isPending = subscriptionData.status === "Pending";
+
+        console.log("Subscription Data:", subscriptionData);
+       const isPending = subscriptionData.status === "Pending";
+       console.log("Is Subscription Pending?", isPending);
 
         if (!isPending) {
-          setIsSubscribed(false);
-          setOpen(true);
+            setOpen(true);
+         
         } else {
-          setIsSubscribed(true);
-          setOpen(false);
+          setOpen(false); 
         }
       }
     } catch (error) {
-      console.error("Error fetching subscriptions:", error);
-      setIsSubscribed(false);
-      setOpen(true); // optional: still show modal if API fails
+      console.error("Error checking subscription:", error);
+      setOpen(true);
     }
   };
 
-  checkSubscription();
-}, []);
+  //  Run check on mount AND on every route change
+  useEffect(() => {
+    // allowlist routes (payment flow)
+    const allowlist = ["/BankAccount", "/checkout", "/payment-success"];
+    if (allowlist.includes(pathname)) {
+      setOpen(false);
+      return;
+    }
 
+    checkSubscription();
+  }, [pathname]); // runs whenever route changes
 
-  if (!open) return null; //  Don't render modal if user is subscribed
+  if (!open) return null;
 
   return (
     <>
@@ -94,7 +94,7 @@ useEffect(() => {
                 Upgrade Your Experience
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Unlock exclusive features, early access to auctions, and priority customer support by becoming a premium member.
+                Unlock exclusive features, early access to auctions, and priority support by becoming a premium member.
               </p>
             </div>
 
@@ -128,4 +128,3 @@ useEffect(() => {
     </>
   );
 }
-

@@ -8,6 +8,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Car, RefreshCcw } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import toast from 'react-hot-toast';
+
 import { useAuth } from '@/context/AuthContext';
 import {
   LoadCanvasTemplate,
@@ -15,6 +20,18 @@ import {
   validateCaptcha,
 } from 'react-simple-captcha';
 import { registerUser } from '@/services/AuthServices/AuthApiFunction';
+
+// --- Yup Validation Schema ---
+const schema = yup.object().shape({
+  fullName: yup.string().required('Full name is required'),
+  mobile: yup.string().required('Mobile number is required').matches(/^[0-9]{10}$/, 'Must be a 10-digit number'),
+  email: yup.string().required('Email is required').email('Must be a valid email'),
+  address: yup.string().required('Address is required'),
+  state: yup.string().required('State is required'),
+  city: yup.string().required('City is required'),
+  pincode: yup.string().required('Pincode is required').matches(/^[0-9]{6}$/, 'Must be a 6-digit number'),
+  captcha: yup.string().required('Captcha is required'),
+});
 
 // --- State & City Data ---
 const indianStates = [
@@ -41,27 +58,28 @@ const citiesByState = {
 
 export default function RegisterPage() {
   const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    mobile: '',
-    email: '',
-    address: '',
-    state: '',
-    city: '',
-    pincode: '',
-  });
-
-  const [captchaInput, setCaptchaInput] = useState('');
   const [availableCities, setAvailableCities] = useState([]);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otpInput, setOtpInput] = useState('');
   const [otpError, setOtpError] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { user } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+     trigger,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const stateValue = watch('state');
 
   useEffect(() => {
     loadCaptchaEnginge(6);
@@ -84,54 +102,54 @@ export default function RegisterPage() {
     return () => clearInterval(timer);
   }, [resendTimer]);
 
-  const handleStateChange = (state) => {
-    setFormData({ ...formData, state, city: '' });
-    setAvailableCities(citiesByState[state] || []);
-  };
+  useEffect(() => {
+    if (stateValue) {
+      setValue('city', '');
+      setAvailableCities(citiesByState[stateValue] || []);
+    }
+  }, [stateValue, setValue]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateCaptcha(captchaInput)) {
-      alert('Invalid Captcha!');
+  const onSubmit = async (data) => {
+    if (!validateCaptcha(data.captcha)) {
+      toast.error('Invalid Captcha!');
+      setValue('captcha', '');
+      loadCaptchaEnginge(6);
       return;
     }
 
-    setIsSubmitting(true);
     try {
       const payload = {
-        fullName: formData.fullName,
-        email: formData.email,
-        mobile: formData.mobile,
-        address: formData.address,
-        city: formData.city,
-        region: formData.state,
-        pinCode: formData.pincode,
-        state: formData.state,
+        fullName: data.fullName,
+        email: data.email,
+        mobile: data.mobile,
+        address: data.address,
+        city: data.city,
+        region: data.state,
+        pinCode: data.pincode,
+        state: data.state,
       };
 
       const res = await registerUser(payload);
 
       if (res.data.success) {
-        alert('Registration successful! OTP sent to your mobile.');
+        toast.success('Registration successful! OTP sent to your mobile.');
         setOtpSent(true);
         setShowOtpModal(true);
         setResendTimer(60);
         setOtpInput('');
         setOtpError(false);
       } else {
-        alert(res.data.message || 'Registration failed');
+        toast.error(res.data.message || 'Registration failed');
       }
     } catch (error) {
-      alert(error.response?.data?.message || 'Registration failed');
-    } finally {
-      setIsSubmitting(false);
+      toast.error(error.response?.data?.message || 'Registration failed');
     }
   };
 
   const handleVerifyOtp = () => {
     if (/^\d{6}$/.test(otpInput)) {
       router.push('/login');
+      toast.success('OTP Verified! Please log in.');
     } else {
       setOtpError(true);
     }
@@ -142,7 +160,7 @@ export default function RegisterPage() {
     setOtpInput('');
     setOtpError(false);
     setResendTimer(60);
-    alert('OTP resent!');
+    toast.success('OTP resent!');
   };
 
   return (
@@ -163,46 +181,97 @@ export default function RegisterPage() {
           </div>
 
           {/* --- Form --- */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {[{
-              type: 'text', key: 'fullName', placeholder: 'Full Name'
-            }, {
-              type: 'tel', key: 'mobile', placeholder: 'Mobile Number', pattern: '[0-9]{10}', maxLength: 10
-            }, {
-              type: 'email', key: 'email', placeholder: 'Email'
-            }, {
-              type: 'text', key: 'address', placeholder: 'Address'
-            }].map((field) => (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Full Name */}
+            <div>
               <input
-                key={field.key}
                 required
-                type={field.type}
-                pattern={field.pattern}
-                maxLength={field.maxLength}
-                value={formData[field.key]}
-                onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
-                placeholder={field.placeholder}
+                type="text"
+                {...register('fullName')}
+                placeholder="Full Name"
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+                onChange={async (e) => {
+                  setValue('fullName', e.target.value);
+                  await trigger('fullName');
+                }}
               />
-            ))}
+              {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
+            </div>
+
+            {/* Mobile Number */}
+            <div>
+              <input
+                required
+                type="tel"
+                pattern="[0-9]{10}"
+                maxLength={10}
+                {...register('mobile')}
+                placeholder="Mobile Number"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+                onChange={async (e) => {
+                  setValue('mobile', e.target.value.replace(/[^0-9]/g, ''));
+                  await trigger('mobile');
+                }}
+              />
+              {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile.message}</p>}
+            </div>
+
+            {/* Email */}
+            <div>
+              <input
+                required
+                type="email"
+                {...register('email')}
+                placeholder="Email"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+                onChange={async (e) => {
+                  setValue('email', e.target.value);
+                  await trigger('email');
+                }}
+              />
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+            </div>
+
+            {/* Address */}
+            <div>
+              <input
+                required
+                type="text"
+                {...register('address')}
+                placeholder="Address"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+                onChange={async (e) => {
+                  setValue('address', e.target.value);
+                  await trigger('address');
+                }}
+              />
+              {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+            </div>
 
             <select
               required
-              value={formData.state}
-              onChange={(e) => handleStateChange(e.target.value)}
+              {...register('state')}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+              onChange={async (e) => {
+                setValue('state', e.target.value);
+                await trigger('state');
+              }}
             >
               <option value="">--Select State--</option>
               {indianStates.map((state) => (
                 <option key={state} value={state}>{state}</option>
               ))}
             </select>
+            {errors.state && <p className="text-red-500 text-sm">{errors.state.message}</p>}
 
             <select
               required
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              {...register('city')}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+              onChange={async (e) => {
+                setValue('city', e.target.value);
+                await trigger('city');
+              }}
             >
               <option value="">--Select City--</option>
               {availableCities.map((city) => (
@@ -213,13 +282,15 @@ export default function RegisterPage() {
             <input
               required
               type="text"
-              pattern="[0-9]{6}"
-              maxLength={6}
-              value={formData.pincode}
-              onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+              {...register('pincode')}
               placeholder="Pincode"
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+              onChange={async (e) => {
+                setValue('pincode', e.target.value.replace(/[^0-9]/g, ''));
+                await trigger('pincode');
+              }}
             />
+            {errors.pincode && <p className="text-red-500 text-sm">{errors.pincode.message}</p>}
 
             {/* Captcha */}
             <div>
@@ -228,10 +299,13 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   required
-                  value={captchaInput}
-                  onChange={(e) => setCaptchaInput(e.target.value)}
+                  {...register('captcha')}
                   placeholder="Enter Captcha"
                   className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
+                  onChange={async (e) => {
+                    setValue('captcha', e.target.value);
+                    await trigger('captcha');
+                  }}
                 />
                 <button
                   type="button"
@@ -241,6 +315,7 @@ export default function RegisterPage() {
                   <RefreshCcw className="h-5 w-5" />
                 </button>
               </div>
+              {errors.captcha && <p className="text-red-500 text-sm mt-1">{errors.captcha.message}</p>}
             </div>
 
             <button

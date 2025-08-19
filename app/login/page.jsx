@@ -107,7 +107,7 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
-  };
+  };                
 
   return (
     <>

@@ -1,5 +1,4 @@
-// import { Post } from "./apiMethod";  
-// import { AuthEndpoints } from "./endpoints/AuthEndpoints"; 
+
 
 import { Get, Post, PostMultipart } from "../ApiMethod";
 import { AuthEndpoints, KycEndpoints, SubscriptionEndpoints } from "./AuthApiEndPoint";
@@ -33,12 +32,6 @@ export const uploadKycImage = (formData) => {
   return PostMultipart(KycEndpoints.uploadImage, formData, true);
 };
 
-// Submit KYC info
-// export const submitKyc = (kycData) => {
-//   // kycData is { aadhaarNumber, panNumber, aadhaarDocumentPath, panDocumentPath, remark }
-//   return Post(KycEndpoints.submitKyc, kycData, true);
-// };
-
 
 export const getUserKyc = () => {
   return Get(KycEndpoints.getKyc, true);
@@ -57,13 +50,15 @@ export const getUserSubscriptions = () => {
   return Get(SubscriptionEndpoints.getUserSubscriptions);
 };
 
-// Subscribe to a plan
-// subscriptionData = { subscriptionId, paymentProofPath, referenceNumber }
+
+
 export const subscribePlan = (subscriptionData) => {
   return Post(SubscriptionEndpoints.subscribe, subscriptionData);
 };
 
 
+
+//------------------------------------//
 
 const BASE_URL = "https://carauctionadmin.ezulix.com/api/buyer/kyc";
 
@@ -73,7 +68,7 @@ const getAuthHeader = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-// ✅ Upload file (PAN / Aadhar)
+//  Upload file (PAN / Aadhar)
 export const uploadKycFile = async (file) => {
   try {
     const fd = new FormData();
@@ -97,7 +92,7 @@ export const uploadKycFile = async (file) => {
   }
 };
 
-// ✅ Submit KYC data
+//  Submit KYC data
 export const submitKyc = async (body) => {
   try {
     const res = await fetch(`${BASE_URL}/uploadKyc`, {

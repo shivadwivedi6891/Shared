@@ -5,8 +5,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { Upload, CheckCircle } from "lucide-react";
-import { message } from "antd";
 
+import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { getUserKyc, submitKyc, uploadKycFile } from "@/services/AuthServices/AuthApiFunction";
 
@@ -82,7 +82,7 @@ export default function KYCModal() {
       console.error("Upload error:", error);
       setUploadedFiles((prev) => ({ ...prev, [type]: false }));
       setFileErrors((prev) => ({ ...prev, [type]: "Upload failed. Try again." }));
-      message.error(`Failed to upload ${type === "panPhoto" ? "PAN" : "Aadhar"} photo.`);
+      toast.error(`Failed to upload ${type === "panPhoto" ? "PAN" : "Aadhar"} photo.`);
     } finally {
       setUploading((prev) => ({ ...prev, [type]: false }));
     }
@@ -92,17 +92,17 @@ export default function KYCModal() {
     e.preventDefault();
 
     if (!validatePAN(formData.panNumber)) {
-      alert("❌ Invalid PAN number. Format should be 5 letters, 4 digits, 1 letter (e.g., ABCDE1234F).");
+      toast.error("Invalid PAN format. Should be ABCDE1234F.");
       return;
     }
 
     if (!validateAadhar(formData.aadharNumber)) {
-      alert("❌ Invalid Aadhar number. It should be a 12-digit number.");
+      toast.error("Invalid Aadhar. Must be 12 digits.");
       return;
     }
 
     if (!uploadedFiles.panPhoto || !uploadedFiles.aadharPhoto) {
-      alert("❌ Please upload both PAN and Aadhar document photos (.jpg/.png only).");
+      toast.error("Please upload both PAN and Aadhar photos.");
       return;
     }
 
@@ -119,16 +119,16 @@ export default function KYCModal() {
 
       if (data?.success) {
         // updateKyc(true);
-        // localStorage.setItem("kyc", "true");
-        // message.success("KYC submitted successfully!");
+        localStorage.setItem("kyc", "true");
+        toast.success("KYC submitted successfully!");
         console.log(data);
-        setIsOpen(false); // ✅ close modal after success
+        setIsOpen(false); //  close modal after success
       } else {
         throw new Error(data.message || "Failed to submit KYC");
       }
     } catch (error) {
       console.error("Submit error:", error);
-      message.error(error.message || "Error submitting KYC");
+      toast.error(error.message || "Error submitting KYC");
     }
   };
 
@@ -160,7 +160,7 @@ export default function KYCModal() {
       }
     };
 
-    checkKYC();
+    checkKYC(); 
   }, [user]);
 
   if (!isOpen) return null;

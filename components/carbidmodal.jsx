@@ -50,11 +50,11 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
         initial={{ opacity: 0, y: -60 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -60 }}
-        className="bg-white dark:bg-gray-900 shadow-xl rounded-xl w-full max-w-6xl max-h-[90vh] overflow-auto p-6 relative"
+        className="bg-white shadow-xl rounded-xl w-full max-w-6xl max-h-[90vh] overflow-auto p-6 relative"
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 dark:text-gray-300 hover:text-red-500"
+          className="absolute right-4 top-4 text-gray-500 hover:text-red-500"
         >
           <X size={24} />
         </button>
@@ -62,13 +62,13 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
         <div className="flex justify-between flex-wrap gap-4 mb-4">
           <div>
             <h2 className="font-bold text-lg">{car?.title || 'Untitled Car'}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Mfg. Year: {car?.year || 'N/A'}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500">Mfg. Year: {car?.year || 'N/A'}</p>
+            <p className="text-sm text-gray-500">
               Evaluation Report: <a href="#" className="text-blue-500 underline">View</a>
             </p>
           </div>
           <div className="flex items-center gap-4 text-sm">
-            <p>Your Last Bid: <span className="text-gray-700 dark:text-white">No bid placed</span></p>
+            <p>Your Last Bid: <span className="text-gray-700">No bid placed</span></p>
             <p>No. of Bids: {car?.bids || 0}</p>
             <p>Contract No: <span className="font-medium">{car?.contractNo || 'N/A'}</span></p>
           </div>
@@ -83,13 +83,13 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
                 'px-4 py-2 rounded-md border transition',
                 activeTab === tab
                   ? 'bg-blue-500 text-white border-blue-500'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'
+                  : 'bg-white text-gray-700 border-gray-300'
               )}
             >
               {tab}
             </button>
           ))}
-          <button className="ml-auto border px-4 py-2 rounded-md bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100 shadow">
+          <button className="ml-auto border px-4 py-2 rounded-md bg-yellow-100 text-yellow-800 shadow">
             ❤ Add to Watchlist
           </button>
         </div>
@@ -126,27 +126,27 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
               </>
             )}
             {activeTab === 'Vehicle Details' && (
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="text-gray-700">
                 Vehicle Type: {car?.type || 'N/A'}<br />
                 Fuel Type: {car?.fuel || 'N/A'}<br />
                 Registration: {car?.registration || 'N/A'}
               </p>
             )}
             {activeTab === 'Other Details' && (
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="text-gray-700">
                 Insurance Validity: {car?.insurance || 'N/A'}<br />
                 RC Status: {car?.rcStatus || 'N/A'}<br />
                 Permit: {car?.permit || 'N/A'}
               </p>
             )}
             {activeTab === 'Evaluation Report' && (
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="text-gray-700">
                 {car?.evaluation || 'Evaluation not available'}
               </p>
             )}
           </div>
 
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-inner space-y-4">
+          <div className="bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
             <p className="text-lg">Open Bid: <strong>₹{car?.startingBid || '0'}</strong></p>
             <p>Your Last Bid: <span className="text-gray-500">No bid placed</span></p>
 
@@ -155,7 +155,7 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
               <input
                 type="number"
                 id="yourBid"
-                className="w-full border px-3 py-2 rounded-md outline-none dark:bg-gray-900 dark:border-gray-600"
+                className="w-full border px-3 py-2 rounded-md outline-none"
                 value={bidAmount}
                 onChange={(e) => setBidAmount(e.target.value)}
               />
@@ -167,7 +167,7 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
                   I Agree to{' '}
                   <button
                     type="button"
-                    onClick={() => setShowTermsModal(true)} // ✅ Show Terms Modal
+                    onClick={() => setShowTermsModal(true)}
                     className="text-blue-600 underline"
                   >
                     Terms & Conditions

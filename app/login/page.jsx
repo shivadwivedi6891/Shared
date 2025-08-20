@@ -148,8 +148,8 @@ export default function LoginPage() {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:via-black dark:to-gray-800 text-black dark:text-white px-4 py-8">
-        <div className="w-full max-w-md bg-white/50 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-300 dark:border-gray-700 space-y-5">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-white text-black px-4 py-8">
+        <div className="w-full max-w-md bg-white/50 backdrop-blur-xl rounded-2xl shadow-xl p-6 border border-gray-300 space-y-5">
           
           {/* Header */}
           <div className="text-center">
@@ -157,7 +157,7 @@ export default function LoginPage() {
             <h1 className="mt-4 text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               AutoBid Login
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-sm text-gray-600">
               Secure login to explore luxury auctions
             </p>
           </div>
@@ -176,7 +176,7 @@ export default function LoginPage() {
                   await trigger('phone');
                 }}
                 placeholder="Enter 10-digit phone"
-                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none"
+                className="w-full px-4 py-3 rounded-xl bg-white text-black border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
               {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
 
@@ -187,7 +187,7 @@ export default function LoginPage() {
                   onClick={handleSendOtp}
                   className={`px-3 py-2 text-xs rounded-xl transition-transform shadow 
                     ${(otpSent && resendDisabled) || sendingOtp
-                      ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                      ? 'bg-gray-300 cursor-not-allowed'
                       : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-105'
                     }`}
                 >
@@ -214,7 +214,7 @@ export default function LoginPage() {
                     await trigger('otp');
                   }}
                   placeholder="Enter OTP"
-                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white text-black border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
                 {errors.otp && <p className="text-red-500 text-sm mt-1">{errors.otp.message}</p>}
               </div>
@@ -227,7 +227,7 @@ export default function LoginPage() {
                 type="text"
                 {...register('captcha')}
                 placeholder="Enter Captcha"
-                className="w-full mt-3 px-4 py-3 rounded-xl bg-white dark:bg-white/10 text-black dark:text-white border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none"
+                className="w-full mt-3 px-4 py-3 rounded-xl bg-white text-black border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
               {errors.captcha && <p className="text-red-500 text-sm mt-1">{errors.captcha.message}</p>}
             </div>
@@ -243,7 +243,7 @@ export default function LoginPage() {
           </form>
 
           {/* Footer */}
-          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
             <Link href="/register" className="text-blue-500 hover:underline font-medium">
               Register here

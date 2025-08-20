@@ -89,7 +89,6 @@ const vehiclesData = [
   },
 ];
 
-
 const states = ['All', 'Delhi', 'Tamil Nadu', 'Bihar'];
 const brands = ['All', 'BMW', 'Mercedes', 'harley'];
 const categories = ['All', 'Two Wheeler', 'Car', 'Lot'];
@@ -138,11 +137,11 @@ export default function AuctionPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-6 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gray-100 py-12 px-6 text-gray-900">
       <h1 className="text-4xl font-bold text-center mb-10">Vehicle Auction Listings</h1>
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
-        <aside className="w-full lg:w-64 bg-white dark:bg-white/5 border dark:border-white/10 rounded-xl p-6 shadow space-y-6">
+        <aside className="w-full lg:w-64 bg-white border rounded-xl p-6 shadow space-y-6">
           {[{ label: 'State', options: states, key: 'state' },
             { label: 'Brand', options: brands, key: 'brand' },
             { label: 'Category', options: categories, key: 'category' }
@@ -150,7 +149,7 @@ export default function AuctionPage() {
             <div key={key}>
               <label className="block text-sm font-medium mb-1">{label}</label>
               <select
-                className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                className="w-full px-3 py-2 border rounded"
                 value={filters[key]}
                 onChange={e => setFilters({ ...filters, [key]: e.target.value })}
               >
@@ -169,7 +168,7 @@ export default function AuctionPage() {
 
         <main className="flex-1 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {filteredVehicles.length === 0 && (
-            <p className="col-span-full text-center text-gray-600 dark:text-gray-300">
+            <p className="col-span-full text-center text-gray-600">
               No vehicles match the selected filters.
             </p>
           )}
@@ -181,10 +180,10 @@ export default function AuctionPage() {
             const isBidValid = isValidBid(currentBid, vehicle.startingBid, increment) && agreed;
 
             return (
-              <div key={vehicle.id} className="bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 shadow-xl p-5 hover:scale-[1.02] transition">
+              <div key={vehicle.id} className="bg-white rounded-xl border shadow-xl p-5 hover:scale-[1.02] transition">
                 <img src={vehicle.image} alt={vehicle.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                 <h2 className="text-lg font-bold">{vehicle.name}</h2>
-                <p className="text-blue-600 dark:text-blue-400">{vehicle.number}</p>
+                <p className="text-blue-600">{vehicle.number}</p>
 
                 <div className="flex flex-wrap gap-2 my-2">
                   {['Gallery', 'Vehicle Details','Other Details','Evaluation Report'].map(tab => (
@@ -195,7 +194,7 @@ export default function AuctionPage() {
                         setActiveTab(tab);
                         setModalOpen(true);
                       }}
-                      className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded"
+                      className="px-3 py-1 text-sm bg-gray-200 rounded"
                     >
                       {tab}
                     </button>
@@ -204,13 +203,13 @@ export default function AuctionPage() {
 
                 <div className='flex gap-1'>
                   <h2>Rank:</h2>
-                  <p className="text-lg font-semibold text-center text-green-600 dark:text-green-400">
+                  <p className="text-lg font-semibold text-center text-green-600">
                     {index + 1}
                   </p>
                 </div>
 
                 {/* Bid Controls */}
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-gray-100 rounded-md">
                   <span className="text-sm font-medium">Your Bid:</span>
                   <div className="flex items-center gap-1">
                     <button
@@ -231,7 +230,7 @@ export default function AuctionPage() {
                     >
                       –
                     </button>
-                    <span className="px-2 text-sm font-semibold text-blue-700 dark:text-blue-300">
+                    <span className="px-2 text-sm font-semibold text-blue-700">
                       ₹{currentBid.toLocaleString()}
                     </span>
                     <button
@@ -325,9 +324,9 @@ export default function AuctionPage() {
       )}
       {confirmModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-sm shadow-lg">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg">
             <h3 className="text-xl font-semibold mb-4">Confirm Your Bid</h3>
-            <p className="mb-4 text-gray-700 dark:text-gray-200">
+            <p className="mb-4 text-gray-700">
               Are you sure you want to place a bid of ₹{bids[bidVehicle?.id]?.amount} on <strong>{bidVehicle?.name}</strong>?
             </p>
             <div className="flex justify-end gap-4">
@@ -336,7 +335,7 @@ export default function AuctionPage() {
                   setConfirmModalOpen(false);
                   setBidVehicle(null);
                 }}
-                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded hover:bg-gray-400"
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               >
                 Cancel
               </button>
@@ -352,5 +351,4 @@ export default function AuctionPage() {
       )}
     </div>
   );
-
 }

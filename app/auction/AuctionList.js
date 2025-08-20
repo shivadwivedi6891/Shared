@@ -507,9 +507,8 @@ export default function AuctionList() {
                 </Link>
               </div>
 
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-45  py-3 flex justify-between text-sm font-medium text-center">
-                <div className='flex mx-auto justify-between gap-[70%]'>
-                <div >
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-45 py-3 flex justify-between text-sm font-medium text-center">
+                <div>
                   <p className="text-lg font-semibold">{auction.totalVehicles}</p>
                   <p>Total Vehicles</p>
                 </div>

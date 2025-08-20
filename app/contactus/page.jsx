@@ -24,10 +24,10 @@ export default function ContactUs() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-white px-6 py-16">
+    <main className="min-h-screen bg-gray-100 text-gray-900 px-6 py-16">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-center">Contact Us</h1>
-        <p className="text-center mb-12 text-gray-600 dark:text-gray-400">
+        <p className="text-center mb-12 text-gray-600">
           Need help or have questions? Get in touch with our team!
         </p>
 
@@ -44,27 +44,26 @@ export default function ContactUs() {
             </div>
             <div className="flex items-center gap-4">
               <MapPin className="w-6 h-6 text-purple-500" />
-              <span>04,Ganesh ganj colony Rannod, Dist.Shivpuri(MP),473781</span>
               <span>07,Thandi sadak Behind durga talkies, Shivpuri(MP),473551</span>
             </div>
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-md space-y-6"
+            className="bg-white p-8 rounded-xl shadow-md space-y-6"
           >
             <div>
               <label htmlFor="name" className="block text-sm mb-1">
                 Name
               </label>
               <input
-              placeholder='Enter the name'
+                placeholder='Enter the name'
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
 
@@ -73,13 +72,13 @@ export default function ContactUs() {
                 Email
               </label>
               <input
-              placeholder='Enter your email'
+                placeholder='Enter your email'
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
 
@@ -88,13 +87,13 @@ export default function ContactUs() {
                 Message
               </label>
               <textarea
-              placeholder='If you want to say something please write here.'
+                placeholder='If you want to say something please write here.'
                 name="message"
                 rows="4"
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
 

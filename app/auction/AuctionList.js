@@ -393,7 +393,7 @@ export default function AuctionList() {
       <select
         value={filters[keyName]}
         onChange={(e) => handleFilterChange(keyName, e.target.value)}
-        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-black dark:text-white"
+        className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
       >
         <option value="">All</option>
         {options.map((opt) => (
@@ -408,9 +408,9 @@ export default function AuctionList() {
   const categories = getUniqueValues(auctionsData, 'category');
 
   return (
-    <div className="flex flex-col lg:flex-row bg-white dark:bg-gray-900 min-h-screen text-black dark:text-white">
+    <div className="flex flex-col lg:flex-row bg-white min-h-screen text-black">
       {/* Sidebar */}
-      <aside className="hidden lg:block lg:w-1/4 bg-white dark:bg-gray-800 p-5 border-r border-gray-300 dark:border-gray-700 sticky top-0 h-fit">
+      <aside className="hidden lg:block lg:w-1/4 bg-white p-5 border-r border-gray-300 sticky top-0 h-fit">
         <h2 className="text-2xl font-bold mb-4">Filter By</h2>
         <button
           onClick={resetFilters}
@@ -435,7 +435,7 @@ export default function AuctionList() {
         </div>
 
         {showMobileFilters && (
-          <form onSubmit={(e) => e.preventDefault()} className="lg:hidden mb-6 border border-gray-300 dark:border-gray-700 rounded p-4 bg-white dark:bg-gray-800">
+          <form onSubmit={(e) => e.preventDefault()} className="lg:hidden mb-6 border border-gray-300 rounded p-4 bg-white">
             <h2 className="text-xl font-bold mb-4">Filter Auctions</h2>
             <button
               type="button"
@@ -468,14 +468,14 @@ export default function AuctionList() {
           currentAuctions.map((auction) => (
             <div
               key={auction.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-300 dark:border-gray-700 mb-6 overflow-hidden max-w-4xl mx-auto"
+              className="bg-white rounded-xl shadow-md border border-gray-300 mb-6 overflow-hidden max-w-4xl mx-auto"
             >
               <div className="flex flex-col sm:flex-row justify-between gap-4 p-4">
                 <div className="flex gap-4">
                   <img
                     src={auction.image}
                     alt={auction.title}
-                    className="w-32 h-20 object-cover rounded border border-gray-300 dark:border-gray-600"
+                    className="w-32 h-20 object-cover rounded border border-gray-300"
                   />
                   <div>
                     <p className="text-blue-600 text-sm font-medium">
@@ -483,7 +483,7 @@ export default function AuctionList() {
                       <span className="text-green-600 ml-2">Current</span>
                     </p>
                     <h2 className="text-lg font-semibold">{auction.title}</h2>
-                    <div className="text-sm text-gray-700 dark:text-gray-300 mt-1 grid grid-cols-1 sm:grid-cols-3 gap-x-6">
+                    <div className="text-sm text-gray-700 mt-1 grid grid-cols-1 sm:grid-cols-3 gap-x-6">
                       <p>Published date<br />{auction.published}</p>
                       <p>Start date<br />{auction.start}</p>
                       <p>End date<br />{auction.end}</p>
@@ -498,7 +498,7 @@ export default function AuctionList() {
                 </div>
               </div>
 
-              <div className="flex justify-around text-sm py-2 border-t border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
+              <div className="flex justify-around text-sm py-2 border-t border-gray-200 text-gray-800">
                 <Link href="/dashboard/buyer" className="flex items-center gap-2 hover:text-purple-500 hover:underline">
                   <span className="text-xl">📋</span> My Bid List
                 </Link>
@@ -520,7 +520,7 @@ export default function AuctionList() {
             </div>
           ))
         ) : (
-          <p className="text-gray-600 dark:text-gray-400 mt-10 text-center">
+          <p className="text-gray-600 mt-10 text-center">
             No auctions found for selected filters.
           </p>
         )}
@@ -545,7 +545,7 @@ export default function AuctionList() {
           </div>
         )}
       </main>
- </div>
-);
+    </div>
+  );
 }
 

@@ -1,10 +1,9 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 import {
   Menu,
   X,
@@ -29,18 +28,16 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
- 
-
-if (!mounted) {
-  return null; // prevents SSR/client mismatch
-}
+  if (!mounted) {
+    return null; // prevents SSR/client mismatch
+  }
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
+    <nav className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -59,7 +56,7 @@ if (!mounted) {
               <Link
                 key={idx}
                 href={path}
-                className="text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 font-medium px-3 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700/50"
+                className="text-gray-800 hover:text-blue-600 transition-all duration-300 font-medium px-3 py-2 rounded-lg hover:bg-blue-50"
               >
                 {path === '/'
                   ? 'Home'
@@ -76,16 +73,16 @@ if (!mounted) {
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
-                  className="p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-800"
+                  className="p-2 rounded-full hover:bg-blue-100"
                 >
-                  <User className="h-5 w-5 text-gray-800 dark:text-gray-300" />
+                  <User className="h-5 w-5 text-gray-800" />
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                     <Link
                       href="/dashboard/buyer"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
                     >
                       <User className="inline-block w-4 h-4 mr-2" />
                       Dashboard
@@ -95,7 +92,7 @@ if (!mounted) {
                         await logout();
                         router.push('/');
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
                     >
                       <LogOut className="inline-block w-4 h-4 mr-2" />
                       Logout
@@ -104,20 +101,19 @@ if (!mounted) {
                 )}
               </div>
             ) : (
-           <>
-  <Link href="/login">
-    <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md hover:from-amber-500 hover:to-orange-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-      Login
-    </button>
-  </Link>
+              <>
+                <Link href="/login">
+                  <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md hover:from-amber-500 hover:to-orange-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    Login
+                  </button>
+                </Link>
 
-  <Link href="/register">
-    <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-md hover:from-blue-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-      Sign Up
-    </button>
-  </Link>
-</>
-
+                <Link href="/register">
+                  <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-md hover:from-blue-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    Sign Up
+                  </button>
+                </Link>
+              </>
             )}
           </div>
 
@@ -125,12 +121,12 @@ if (!mounted) {
           <div className="md:hidden flex items-center gap-2">
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-transform duration-300 transform hover:scale-105 shadow-sm"
+              className="p-2 rounded-lg border border-gray-300 bg-gray-100 hover:bg-gray-200 transition-transform duration-300 transform hover:scale-105 shadow-sm"
             >
               {isOpen ? (
-                <X className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+                <X className="h-6 w-6 text-gray-800" />
               ) : (
-                <Menu className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+                <Menu className="h-6 w-6 text-gray-800" />
               )}
             </button>
           </div>
@@ -138,17 +134,17 @@ if (!mounted) {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden bg-white dark:bg-gray-900 shadow-md rounded-b-xl px-6 py-6 space-y-6 flex flex-col items-center">
+          <div className="md:hidden bg-white shadow-md rounded-b-xl px-6 py-6 space-y-6 flex flex-col items-center">
             <div className="flex flex-col items-start w-full gap-4">
-              <Link href="/" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+              <Link href="/" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 hover:text-blue-600">
                 <Home className="h-5 w-5" /> Home
               </Link>
 
-              <Link href="/Category" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+              <Link href="/Category" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 hover:text-blue-600">
                 <Gavel className="h-5 w-5" /> Auction
               </Link>
 
-              <Link href="/about" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+              <Link href="/about" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 hover:text-blue-600">
                 <Info className="h-5 w-5" /> About
               </Link>
             </div>
@@ -157,7 +153,7 @@ if (!mounted) {
               {!user ? (
                 <>
                   <Link href="/login">
-                    <button onClick={closeMenu} className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700">
+                    <button onClick={closeMenu} className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800 bg-white hover:bg-blue-50">
                       Login
                     </button>
                   </Link>

@@ -2,10 +2,10 @@
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen px-6 py-16 bg-white dark:bg-black text-gray-900 dark:text-white">
+    <main className="min-h-screen px-6 py-16 bg-white text-gray-900">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-center">Terms & Conditions</h1>
-        <p className="mb-8 text-gray-600 dark:text-gray-400 text-center">
+        <p className="mb-8 text-gray-600 text-center">
           Last Updated: July 2025
         </p>
 

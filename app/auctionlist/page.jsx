@@ -273,7 +273,9 @@ export default function AuctionPage() {
 
                 <div className="flex gap-2 mt-4">
                   <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">
+                    
                     View Details
+
                   </button>
 
                   <button

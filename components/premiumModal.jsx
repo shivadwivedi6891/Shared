@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 import { getUserKyc, getUserSubscriptions } from "@/services/AuthServices/AuthApiFunction";
+import { useAuth } from "@/context/AuthContext";
 
 export default function PremiumModal() {
   const [step, setStep] = useState("plans");
@@ -11,6 +12,8 @@ export default function PremiumModal() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+   const {  user,token ,logout} = useAuth();
 
   const plans = [
     { name: "Premium", price: "₹999 / Year", id: "premium", numericAmount: 999 },
@@ -24,13 +27,30 @@ export default function PremiumModal() {
 
   const checkSubscription = async () => {
     const user = localStorage.getItem("user")
+   
       ? JSON.parse(localStorage.getItem("user"))
       : null;
-
     if (!user) {
       setOpen(false);
+      logout();
+
+      // router.push("/login");
       return;
     }
+
+
+console.log("tokennnnnnn",token)
+    if (  !token) {
+      setOpen(false);
+      
+      
+      logout();
+      // router.push("/login");
+      return;
+    }
+
+   
+
 
     try {
       // 1. Check KYC
@@ -42,7 +62,13 @@ export default function PremiumModal() {
         setOpen(false);
         return;
       }
-
+// const kyc = localStorage.getItem("kyc")
+//       console.log("KYC Data:", kyc);
+// if(!kyc){
+//         setOpen(false);
+//       return;
+//     }
+      
       // 2. Check subscription
       const res = await getUserSubscriptions();
       const subscriptionList = res?.data?.data || [];

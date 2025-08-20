@@ -11,7 +11,10 @@ import { getUserKyc, submitKyc, uploadKycFile } from "@/services/AuthServices/Au
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useAuth();
+  const { user,logout } = useAuth();
+
+ 
+
 
   // File state
   const [uploadedFiles, setUploadedFiles] = useState({
@@ -60,6 +63,12 @@ export default function KYCModal() {
     setUploading((prev) => ({ ...prev, [type]: true }));
 
     try {
+      const auth = localStorage.getItem("user")
+      if(!auth) {
+        setIsOpen(false);
+        logout();
+        return;
+      }
       const data = await uploadKycFile(file);
       if (data?.data?.filePath) {
         setUploadedFiles((prev) => ({ ...prev, [type]: true }));

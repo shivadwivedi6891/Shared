@@ -19,6 +19,16 @@ export const AuthProvider = ({ children }) => {
     return null;
   });
 
+  // Automatically logout if token is missing
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) {
+        logout();
+      }
+    }
+  }, [token]);
+
  
   const [kyc, setKyc] = useState(() => {
     if (typeof window !== "undefined") {
@@ -72,7 +82,8 @@ const isKycComplete =
 
 console.log("Is KYC Complete?", isKycComplete);
 
-
+console.log("Login Response:", loginResponse);
+console.log("User:", user);
   setUser(user);
   setToken(token);
   setKyc(kyc || null);

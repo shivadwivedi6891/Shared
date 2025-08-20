@@ -124,7 +124,7 @@ export default function AuctionPage() {
 
   const confirmPlaceBid = () => {
     if (bidVehicle) {
-      alert(`✅ Bid placed on ${bidVehicle.name} for ₹${bids[bidVehicle.id]?.amount}`);
+      alert(` Bid placed on ${bidVehicle.name} for ₹${bids[bidVehicle.id]?.amount}`);
       setConfirmModalOpen(false);
       setBidVehicle(null);
     }
@@ -231,7 +231,7 @@ export default function AuctionPage() {
                       –
                     </button>
                     <span className="px-2 text-sm font-semibold text-blue-700">
-                      ₹{currentBid.toLocaleString()}
+                      ₹{currentBid.toLocaleString("en-US")}
                     </span>
                     <button
                       onClick={() =>
@@ -272,8 +272,14 @@ export default function AuctionPage() {
                 </label>
 
                 <div className="flex gap-2 mt-4">
-                  <button className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">
-                    
+                  <button
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg"
+                    onClick={() => {
+                      setSelectedCar(vehicle);
+                      setActiveTab('Vehicle Details');
+                      setModalOpen(true);
+                    }}
+                  >
                     View Details
 
                   </button>
@@ -285,7 +291,7 @@ export default function AuctionPage() {
                         return;
                       }
 
-                      const isPremium = localStorage.getItem('premium_done') === 'true';
+                      const isPremium = localStorage.getItem('subscription') === 'true';
                       if (!isPremium) {
                         alert('⚠ You must complete Premium Membership to place bids.');
                         router.push('/dashboard/buyer');

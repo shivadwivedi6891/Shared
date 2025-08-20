@@ -24,6 +24,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
 
+  // const { user, token, logout } = useAuth();
+
 
   return (
     <html lang="en"suppressHydrationWarning>

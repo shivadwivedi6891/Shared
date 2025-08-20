@@ -516,7 +516,6 @@ export default function AuctionList() {
                   <p className="text-lg font-semibold">{auction.myBids}</p>
                   <p>My Bids</p>
                 </div>
-                </div>
               </div>
             </div>
           ))

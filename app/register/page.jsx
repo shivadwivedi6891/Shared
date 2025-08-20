@@ -134,10 +134,14 @@ export default function RegisterPage() {
       if (res.data.success) {
         toast.success('Registration successful! OTP sent to your mobile.');
         setOtpSent(true);
+
+        router.push('/login');
         setShowOtpModal(true);
         setResendTimer(60);
         setOtpInput('');
         setOtpError(false);
+
+
       } else {
         toast.error(res.data.message || 'Registration failed');
       }
@@ -146,22 +150,22 @@ export default function RegisterPage() {
     }
   };
 
-  const handleVerifyOtp = () => {
-    if (/^\d{6}$/.test(otpInput)) {
-      router.push('/login');
-      toast.success('OTP Verified! Please log in.');
-    } else {
-      setOtpError(true);
-    }
-  };
+  // const handleVerifyOtp = () => {
+  //   if (/^\d{6}$/.test(otpInput)) {
+  //     router.push('/login');
+  //     toast.success('OTP Verified! Please log in.');
+  //   } else {
+  //     setOtpError(true);
+  //   }
+  // };
 
-  const handleResendOtp = () => {
-    setOtpSent(true);
-    setOtpInput('');
-    setOtpError(false);
-    setResendTimer(60);
-    toast.success('OTP resent!');
-  };
+  // const handleResendOtp = () => {
+  //   setOtpSent(true);
+  //   setOtpInput('');
+  //   setOtpError(false);
+  //   setResendTimer(60);
+  //   toast.success('OTP resent!');
+  // };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white">
@@ -282,6 +286,7 @@ export default function RegisterPage() {
             <input
               required
               type="text"
+              maxLength={6}
               {...register('pincode')}
               placeholder="Pincode"
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition"
@@ -348,65 +353,7 @@ export default function RegisterPage() {
       </div>
 
       {/* --- OTP Modal --- */}
-      {showOtpModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm relative animate-fadeSlide">
-            <button
-              onClick={() => setShowOtpModal(false)}
-              className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition"
-              aria-label="Close"
-            >
-              ✕
-            </button>
-
-            <h2 className="text-xl font-bold mb-4 text-center">Verify OTP</h2>
-
-            <input
-              type="text"
-              value={otpInput}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 6) {
-                  setOtpInput(value);
-                  setOtpError(false);
-                }
-              }}
-              placeholder="Enter 6-digit OTP"
-              maxLength={6}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition mb-2"
-            />
-
-            {otpError && (
-              <p className="text-red-500 text-sm mb-2">Invalid OTP. Please try again.</p>
-            )}
-
-            <button
-              onClick={handleVerifyOtp}
-              disabled={otpInput.length !== 6}
-              className={`w-full py-3 rounded-lg font-semibold mb-3 transition ${
-                otpInput.length === 6
-                  ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md'
-                  : 'bg-gray-400 text-white cursor-not-allowed'
-              }`}
-            >
-              Verify
-            </button>
-
-            {resendTimer > 0 ? (
-              <p className="text-center text-gray-500 text-sm">
-                Resend OTP in {resendTimer} seconds
-              </p>
-            ) : (
-              <button
-                onClick={handleResendOtp}
-                className="w-full py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Resend OTP
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+     
 
       <style jsx>{`
         @keyframes fadeSlide {

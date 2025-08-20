@@ -86,6 +86,7 @@ export default function LoginPage() {
     try {
       setSendingOtp(true);
       const res = await sendOtp(phone);
+      console.log('OTP Response:', res);
       if (res.data.success) {
         toast.success(`OTP sent to +91-${phone}`);
         setOtpSent(true);
@@ -95,7 +96,7 @@ export default function LoginPage() {
         resetField('captcha');
         loadCaptchaEnginge(6);
       } else {
-        toast.error(res.message || 'Failed to send OTP');
+        toast.error(res.data.message || 'Failed to send OTP');
       }
     } catch (err) {
       toast.error(err.message || 'Error sending OTP');

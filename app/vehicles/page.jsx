@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -84,79 +83,77 @@ export default function AllCarsPage() {
   }
 
   return (
- 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 dark:from-[#0f0f0f] dark:to-[#1a1a1a] py-12 px-6">
-        <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-800 dark:text-white">
-          Explore Cars for Auction
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 py-12 px-6">
+      <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-800">
+        Explore Cars for Auction
+      </h1>
 
-        <div className="flex justify-center mb-12">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Search cars by name..."
-            className="w-full max-w-3xl px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1f1f1f] text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div className="flex justify-center mb-12">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearch}
+          placeholder="Search cars by name..."
+          className="w-full max-w-3xl px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredCars.map((car) => {
-            const carBid = bids[car.id] || {};
-            const isBidInvalid =
-              !carBid.agree ||
-              !carBid.bidAmount ||
-              Number(carBid.bidAmount) <= Number(car.price);
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {filteredCars.map((car) => {
+          const carBid = bids[car.id] || {};
+          const isBidInvalid =
+            !carBid.agree ||
+            !carBid.bidAmount ||
+            Number(carBid.bidAmount) <= Number(car.price);
 
-            return (
-              <div
-                key={car.id}
-                className="bg-white dark:bg-white/5 rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-xl group"
-              >
-                <div className="overflow-hidden">
-                  <img
-                    src={car.image}
-                    alt={car.name}
-                    className="w-full h-52 object-cover transform group-hover:scale-105 transition duration-300"
-                  />
+          return (
+            <div
+              key={car.id}
+              className="bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-xl group"
+            >
+              <div className="overflow-hidden">
+                <img
+                  src={car.image}
+                  alt={car.name}
+                  className="w-full h-52 object-cover transform group-hover:scale-105 transition duration-300"
+                />
+              </div>
+
+              <div className="p-5 space-y-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {car.name}
+                </h2>
+                <p className="text-green-600 font-semibold text-lg">
+                  $ {Number(car.price).toLocaleString()}
+                </p>
+
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>
+                    <span className="font-medium">📍 Location:</span>{" "}
+                    {car.location}
+                  </p>
+                  <p>
+                    <span className="font-medium">📅 Year:</span> {car.year} •{" "}
+                    {car.mileage} km
+                  </p>
+                  <p>
+                    <span className="font-medium">⚙ Specs:</span>{" "}
+                    {car.fuelType} • {car.transmission}
+                  </p>
                 </div>
 
-                <div className="p-5 space-y-2">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {car.name}
-                  </h2>
-                  <p className="text-green-600 dark:text-green-400 font-semibold text-lg">
-                    $ {Number(car.price).toLocaleString()}
-                  </p>
-
-                  <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                    <p>
-                      <span className="font-medium">📍 Location:</span>{" "}
-                      {car.location}
-                    </p>
-                    <p>
-                      <span className="font-medium">📅 Year:</span> {car.year} •{" "}
-                      {car.mileage} km
-                    </p>
-                    <p>
-                      <span className="font-medium">⚙ Specs:</span>{" "}
-                      {car.fuelType} • {car.transmission}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 space-y-2">
-                   
-                    <div className="flex gap-2">
-                      <button className="flex-1 bg-purple-800 hover:bg-yellow-700 text-white py-2 rounded-lg text-sm">
-                        <Link href={`/auction/${car.id}`}>View Details</Link>
-                      </button>
-                    </div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex gap-2">
+                    <button className="flex-1 bg-purple-800 hover:bg-yellow-700 text-white py-2 rounded-lg text-sm">
+                      <Link href={`/auction/${car.id}`}>View Details</Link>
+                    </button>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
+    </div>
   );
 }

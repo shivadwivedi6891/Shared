@@ -51,7 +51,7 @@ export default function AboutPage() {
           <div className="mt-16 text-center">
             <h3 className="text-2xl font-semibold mb-4 text-black">Ready to get started?</h3>
             <div className="flex justify-center gap-4">
-              <Link href="/auctions">
+              <Link href="/auction">
                 <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-lg hover:scale-105 transition shadow">
                   Browse Auctions
                 </button>

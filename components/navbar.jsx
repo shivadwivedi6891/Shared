@@ -52,7 +52,7 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
-            {['/', '/Category', '/about'].map((path, idx) => (
+            {['/', '/auction', '/about'].map((path, idx) => (
               <Link
                 key={idx}
                 href={path}

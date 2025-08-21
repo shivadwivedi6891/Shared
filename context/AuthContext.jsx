@@ -70,6 +70,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("kyc", JSON.stringify(isKycComplete));
   };
 
+
+
+
+
+
   const login = (loginResponse) => {
     const { user, token, kyc, subscription } = loginResponse;
 
@@ -116,6 +121,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         loading,
         setLoading,
+      
       }}
     >
       {children}

@@ -8,10 +8,13 @@ import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { getUserKyc, submitKyc, uploadKycFile } from "@/services/AuthServices/AuthApiFunction";
+import { useRouter } from "next/navigation";
+
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user,logout } = useAuth();
+  const { user,logout,updateUserKycStatus } = useAuth();
+  const router = useRouter();
 
  
 
@@ -102,7 +105,12 @@ export default function KYCModal() {
 
       if (res?.success) {
         toast.success("KYC submitted successfully!");
+        router.push('/');
         setIsOpen(false);
+          router.push('/auction');
+      
+     
+       
       } else {
         throw new Error(res.message || "KYC failed");
       }
@@ -121,6 +129,14 @@ export default function KYCModal() {
       setIsOpen(false);
       return;
     }
+
+      if (!localStorage.getItem("token")) {
+    setIsOpen(false);
+    logout();
+    return;
+  }
+
+
     const checkKYC = async () => {
       try {
         const res = await getUserKyc();
@@ -162,7 +178,8 @@ export default function KYCModal() {
                 validate: (val) => validatePAN(val) || "Invalid PAN format (ABCDE1234F)",
               })}
               onChange={(e) => {
-                e.target.value = e.target.value.toUpperCase();
+                const value = e.target.value.toUpperCase();
+                setValue("panNumber", value, { shouldValidate: true });
                 trigger("panNumber");
               }}
               className="w-full px-4 py-2 border rounded-lg"
@@ -213,7 +230,8 @@ export default function KYCModal() {
                 validate: (val) => validateAadhar(val) || "Aadhar must be 12 digits",
               })}
               onChange={(e) => {
-                e.target.value = e.target.value.replace(/\D/g, "");
+                const value = e.target.value.replace(/\D/g, "");
+                setValue("aadharNumber", value, { shouldValidate: true });
                 trigger("aadharNumber");
               }}
               className="w-full px-4 py-2 border rounded-lg"

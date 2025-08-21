@@ -102,7 +102,7 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/login">
+                <Link href="/login" scroll={false}>
                   <button className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold shadow-md hover:from-amber-500 hover:to-orange-600 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                     Login
                   </button>

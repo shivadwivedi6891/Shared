@@ -26,21 +26,21 @@ export default function CarDetailPage() {
 
   if (error)
     return (
-      <div className="text-center text-red-600 dark:text-red-400 mt-10">
+      <div className="text-center text-red-600 mt-10">
         {error}
       </div>
     );
 
   if (!car)
     return (
-      <div className="text-center text-gray-600 dark:text-gray-300 mt-10">
+      <div className="text-center text-gray-600 mt-10">
         Loading...
       </div>
     );
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-700 shadow-lg rounded-2xl mt-8 transition-colors duration-300">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    <div className="p-6 max-w-3xl mx-auto bg-white border border-gray-200 shadow-lg rounded-2xl mt-8 transition-colors duration-300">
+      <h1 className="text-3xl font-bold text-gray-900 mb-4">
         {car.name}
       </h1>
 
@@ -50,7 +50,7 @@ export default function CarDetailPage() {
         className="w-full max-w-2xl rounded-lg object-cover mx-auto"
       />
 
-      <div className="mt-6 space-y-3 text-gray-800 dark:text-gray-300 text-sm sm:text-base">
+      <div className="mt-6 space-y-3 text-gray-800 text-sm sm:text-base">
         <p><strong className="font-medium">Location:</strong> {car.location}</p>
         <p><strong className="font-medium">Price:</strong> ₹{car.price.toLocaleString()}</p>
         <p><strong className="font-medium">Year:</strong> {car.year}</p>

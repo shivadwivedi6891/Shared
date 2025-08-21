@@ -52,7 +52,7 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
-            {['/', '/Category', '/about'].map((path, idx) => (
+            {['/', '/auction', '/about'].map((path, idx) => (
               <Link
                 key={idx}
                 href={path}
@@ -140,7 +140,7 @@ export default function Navbar() {
                 <Home className="h-5 w-5" /> Home
               </Link>
 
-              <Link href="/Category" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 hover:text-blue-600">
+              <Link href="/auction" onClick={closeMenu} className="flex items-center gap-2 w-full text-gray-800 hover:text-blue-600">
                 <Gavel className="h-5 w-5" /> Auction
               </Link>
 

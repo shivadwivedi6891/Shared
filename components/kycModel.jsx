@@ -145,7 +145,7 @@ export default function KYCModal() {
       {/* Background Blur */}
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
 
-      <Dialog.Panel className="relative w-full max-w-md rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-xl transition">
+      <Dialog.Panel className="relative w-full max-w-md rounded-2xl bg-white text-black p-6 shadow-xl transition">
         <Dialog.Title className="text-2xl font-bold text-center mb-6">
           KYC Verification
         </Dialog.Title>

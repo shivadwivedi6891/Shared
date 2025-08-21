@@ -4,11 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useEffect } from 'react';
 
 export default function PrivateRoute({ children }) {
-  const { user } = useAuth();
+  const { user,token } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !token) {
       router.push('/login');
     }
   }, [user, router]);

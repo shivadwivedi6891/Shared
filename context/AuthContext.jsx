@@ -81,8 +81,8 @@ export const AuthProvider = ({ children }) => {
     // Validate KYC
     const isKycComplete =
       kyc &&
-      Number(kyc.aadhaarStatus) === 1 &&
-      Number(kyc.panStatus) === 1;
+      Number(kyc.aadhaarStatus) === 2 &&
+      Number(kyc.panStatus) === 2;
 
     // Update state
     setUser(user);

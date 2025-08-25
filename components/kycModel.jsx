@@ -19,6 +19,7 @@ export default function KYCModal() {
   const [aadharStatus, setAadharStatus] = useState(0);
   const [panRejectionMessage, setPanRejectionMessage] = useState("");
   const [aadharRejectionMessage, setAadharRejectionMessage] = useState("");
+  const [adminRemark, setAdminRemark] = useState("");
 
 
   // File state
@@ -105,26 +106,27 @@ export default function KYCModal() {
         remark: formData.remark || "",
       });
 
-      // await checkKYC();
       console.log("KYC Submission Response:", res);
-      getUserKyc();
-
-
 
       if (res?.success) {
-        toast.success("KYC submitted taster successfully!");
-
-          if (panStatus === 2 && aadharStatus === 2) {
-            setIsOpen(false);
-     
-          router.push('/auction');
-          } else {
-            setIsOpen(true);
+        toast.success("KYC submitted successfully!");
+        // Poll for verification status
+        const pollKyc = async (retries = 8, delay = 2000) => {
+          for (let i = 0; i < retries; i++) {
+            try {
+              const kycRes = await getUserKyc();
+              const kycData = kycRes?.data?.data;
+              if (kycData?.panStatus === 2 && kycData?.aadhaarStatus === 2) {
+                setIsOpen(false);
+                updateUserKycStatus(2);
+                return;
+              }
+            } catch {}
+            await new Promise((resolve) => setTimeout(resolve, delay));
           }
-      
-     
-       
-      // } else {
+        };
+        pollKyc();
+      } else {
         throw new Error(res.message || "KYC failed");
       }
     } catch (err) {
@@ -133,56 +135,74 @@ export default function KYCModal() {
   };
 
   // Check if KYC already exists
-  useEffect(() => {
-    const user = localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : null;
+useEffect(() => {
+  const checkKYC = async () => {
+    try {
+      const res = await getUserKyc();
+      const kycData = res?.data?.data;
 
-    if (!user) {
-      setIsOpen(false);
-      return;
-    }
+      if (kycData) {
+        const panStat = kycData.panStatus;
+        const aadharStat = kycData.aadhaarStatus;
 
-    if (!localStorage.getItem("token")) {
-      setIsOpen(false);
-      logout();
-      return;
-    }
+        setPanStatus(panStat);
+        setAadharStatus(aadharStat);
+        setAdminRemark(kycData.adminRemark);
 
-    const checkKYC = async () => {
-      try {
-        const res = await getUserKyc();
-        const kycData = res?.data?.data;
-
-        if (kycData) {
-          const panStat = kycData.panStatus;
-          const aadharStat = kycData.aadhaarStatus;
-
-          setPanStatus(panStat);
-          setAadharStatus(aadharStat);
-
-          if (panStat === 1 && aadharStat === 1) {
-            setIsOpen(false);
-            updateUserKycStatus(2);
-          } else {
-            setIsOpen(true);
-            if (panStat === 3) {
-              setPanRejectionMessage(kycData.panRejectionReason || "PAN Rejected. Please upload again.");
-            }
-            if (aadharStat === 3) {
-              setAadharRejectionMessage(kycData.adminRemark || "Aadhar Rejected. Please upload again.");
-            }
-          }
+        if (panStat === 2 && aadharStat === 2) {
+          // ✅ Both verified → Close modal
+          setIsOpen(false);
+          updateUserKycStatus(2);
         } else {
+          // ❌ Not verified → Open modal
           setIsOpen(true);
+
+          if (panStat === 3) {
+            setPanRejectionMessage(
+              kycData.panRejectionReason || "PAN Rejected. Please upload again."
+            );
+          }
+          if (aadharStat === 3) {
+            setAadharRejectionMessage(
+              kycData.adminRemark || "Aadhar Rejected. Please upload again."
+            );
+          }
         }
-      } catch (error) {
+      } else {
+        // 🚨 No KYC record → Force open
         setIsOpen(true);
       }
-    };
+    } catch (error) {
+      // 🚨 API error → Assume no KYC, force open
+      setIsOpen(true);
+    }
+  };
 
-    checkKYC();
-  }, [user, logout, updateUserKycStatus]);
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
+
+  if (!user) {
+    setIsOpen(false);
+    return;
+  }
+
+  if (!localStorage.getItem("token")) {
+    setIsOpen(false);
+    logout();
+    return;
+  }
+
+  checkKYC();
+}, [user, logout, updateUserKycStatus]);
+
+useEffect(() => {
+  if (panStatus === 2 && aadharStatus === 2) {
+    setIsOpen(false);
+  }
+}, [panStatus, aadharStatus]);
+
+
 
   if (!isOpen) return null;
 
@@ -335,15 +355,29 @@ export default function KYCModal() {
           </div>
 
           {/* Remark */}
-          <div>
-            <label className="block mb-1 text-sm font-medium">Remark (optional)</label>
-            <textarea
-              {...register("remark")}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Any additional remarks"
-              rows={3}
-            />
-          </div>
+          {(panStatus === 3 || aadharStatus === 3) && (
+            <div>
+              <label className="block mb-1 text-sm font-medium">Admin Remark</label>
+              <textarea
+                readOnly
+                value={adminRemark}
+                className="w-full px-4 py-2 border rounded-lg bg-gray-100"
+                rows={3}
+              />
+            </div>
+          )}
+
+          {!(panStatus === 1 || aadharStatus === 1) && (
+            <div>
+              <label className="block mb-1 text-sm font-medium">Remark (optional)</label>
+              <textarea
+                {...register("remark")}
+                className="w-full px-4 py-2 border rounded-lg"
+                placeholder="Any additional remarks"
+                rows={3}
+              />
+            </div>
+          )}
 
           {!(panStatus === 1 && aadharStatus === 1) && (
             <button

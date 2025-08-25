@@ -90,7 +90,7 @@ export default function PremiumModal() {
       try {
         const kycRes = await getUserKyc();
         const kycData = kycRes?.data?.data;
-        if (kycData?.aadhaarStatus === 1 && kycData?.panStatus === 1) {
+        if (kycData?.aadhaarStatus === 2 && kycData?.panStatus === 2) {
           return true;
         }
       } catch (err) {

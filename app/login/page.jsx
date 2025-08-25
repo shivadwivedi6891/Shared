@@ -126,6 +126,9 @@ export default function LoginPage() {
         otp: data.otp,
       });
 
+      console.log('Login Response:', res.data);
+     
+
       if (res.data.success) {
         login({
           user: res.data.data.user,

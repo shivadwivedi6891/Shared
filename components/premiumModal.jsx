@@ -13,6 +13,7 @@ export default function PremiumModal() {
   const [step, setStep] = useState("plans");
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [open, setOpen] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -51,7 +52,8 @@ export default function PremiumModal() {
       const kycData = kycRes?.data?.data;
 
       console.log("KYC Response:", kycRes);
-      console.log("KYC Data:", kycData);
+      console.log("KYC Data: from bank", kycData);
+
 
 
       if (!kycData || kycData.aadhaarStatus !== 2 || kycData.panStatus !== 2) {
@@ -65,14 +67,15 @@ export default function PremiumModal() {
 
       if (subscriptionList.length === 0) {
         setOpen(true); // no subscription -> open modal
+        setSubscriptionStatus(null);
       } else {
         const subscriptionData = subscriptionList[0];
-        const isPending = subscriptionData.status === "Pending";
+        setSubscriptionStatus(subscriptionData.status);
 
-        if (!isPending) {
-          setOpen(true); // active subscription -> show success
+        if (subscriptionData.status === "Pending") {
+          setOpen(true); // pending subscription -> show modal
         } else {
-          setOpen(false); // still pending -> don’t show modal
+          setOpen(false); // active/other status -> hide modal
         }
       }
     } catch (error) {
@@ -145,10 +148,10 @@ export default function PremiumModal() {
                 <button
                   key={plan.id}
                   onClick={() => handlePlanSelect(plan)}
-                  className="px-4 py-6 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-xl hover:scale-105 transition shadow-md"
-                >
+                  disabled={subscriptionStatus === 'Pending'}
+                  className={`px-4 py-6 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-xl transition shadow-md ${subscriptionStatus === 'Pending' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}>
                   <div className="text-lg font-bold mb-1">{plan.name}</div>
-                  <div className="text-sm">{plan.price}</div>
+                  <div className="text-sm">{subscriptionStatus === 'Pending' ? 'Pending' : plan.price}</div>
                 </button>
               ))}
             </div>
@@ -170,4 +173,3 @@ export default function PremiumModal() {
     </>
   );
 }
-

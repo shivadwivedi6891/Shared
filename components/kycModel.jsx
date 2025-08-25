@@ -105,15 +105,26 @@ export default function KYCModal() {
         remark: formData.remark || "",
       });
 
+      // await checkKYC();
+      console.log("KYC Submission Response:", res);
+      getUserKyc();
+
+
+
       if (res?.success) {
-        toast.success("KYC submitted successfully!");
-        router.push('/');
-        setIsOpen(false);
+        toast.success("KYC submitted taster successfully!");
+
+          if (panStatus === 2 && aadharStatus === 2) {
+            setIsOpen(false);
+     
           router.push('/auction');
+          } else {
+            setIsOpen(true);
+          }
       
      
        
-      } else {
+      // } else {
         throw new Error(res.message || "KYC failed");
       }
     } catch (err) {
@@ -150,16 +161,16 @@ export default function KYCModal() {
           setPanStatus(panStat);
           setAadharStatus(aadharStat);
 
-          if (panStat === 2 && aadharStat === 2) {
+          if (panStat === 1 && aadharStat === 1) {
             setIsOpen(false);
             updateUserKycStatus(2);
           } else {
             setIsOpen(true);
-            if (panStat === 1) {
+            if (panStat === 3) {
               setPanRejectionMessage(kycData.panRejectionReason || "PAN Rejected. Please upload again.");
             }
-            if (aadharStat === 1) {
-              setAadharRejectionMessage(kycData.aadhaarRejectionReason || "Aadhar Rejected. Please upload again.");
+            if (aadharStat === 3) {
+              setAadharRejectionMessage(kycData.adminRemark || "Aadhar Rejected. Please upload again.");
             }
           }
         } else {
@@ -233,10 +244,15 @@ export default function KYCModal() {
                       <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                       <button
                         type="button"
-                        onClick={() => panInputRef.current?.click()}
+                        onClick={() => {
+                          if (panStatus === 3) {
+                            setPanStatus(0); 
+                          }
+                          panInputRef.current?.click();
+                        }}
                         className="px-4 py-1 bg-blue-600 text-white rounded"
                       >
-                        {uploading.panPhoto ? "Uploading..." : "Choose File"}
+                        {uploading.panPhoto ? "Uploading..." : "Re-upload"}
                       </button>
                       <input
                         type="file"

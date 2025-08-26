@@ -110,6 +110,9 @@ export default function KYCModal() {
 
       console.log("KYC Submission Response:", res);
 
+      router.refresh();
+      router.push("/dashboard/buyer");
+
       if (res?.success) {
         toast.success("KYC submitted successfully!");
         // Poll for verification status
@@ -284,7 +287,7 @@ export default function KYCModal() {
                         }}
                         className="px-4 py-1 bg-blue-600 text-white rounded"
                       >
-                        {uploading.panPhoto ? "Uploading..." : "Re-upload"}
+                        {uploading.panPhoto ? "Uploading..." : "chose File"}
                       </button>
                       <input
                         type="file"

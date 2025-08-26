@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import PlaceBidTableModal from "@/components/placebidtable"; // <-- Import the modal
 
 const categorySlugToName = {
   'car': 'Car',
@@ -407,6 +408,30 @@ export default function AuctionList() {
   const brands = getUniqueValues(auctionsData, 'brand');
   const categories = getUniqueValues(auctionsData, 'category');
 
+  // Modal state
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [selectedAuction, setSelectedAuction] = useState(null);
+
+  // Dummy vehicles for demo (replace with real slot vehicles)
+  const slotVehicles = [
+    {
+      id: 1,
+      name: "BMW M5",
+      number: "NL01AA9365",
+      category: "Car",
+      image: "https://news.dupontregistry.com/wp-content/uploads/2022/09/2022-bmw-m5-cs-1.jpg",
+      startingBid: 7550000,
+    },
+    {
+      id: 2,
+      name: "Mercedes 2518",
+      number: "TN18AV4185",
+      category: "Lot",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPF93lDlRe4ektKrTnEguHYykeFXuXwyjzXw&s",
+      startingBid: 1050000,
+    },
+  ];
+
   return (
     <div className="flex flex-col lg:flex-row bg-white min-h-screen text-black">
       {/* Sidebar */}
@@ -460,8 +485,8 @@ export default function AuctionList() {
           {filters.state
             ? `Auctions in ${filters.state}`
             : filters.category
-              ? `Live ${filters.category} Auction List`
-              : 'Live Auction List'}
+            ? `Live ${filters.category} Auction List`
+            : 'Live Auction List'}
         </h1>
 
         {currentAuctions.length ? (
@@ -484,25 +509,52 @@ export default function AuctionList() {
                     </p>
                     <h2 className="text-lg font-semibold">{auction.title}</h2>
                     <div className="text-sm text-gray-700 mt-1 grid grid-cols-1 sm:grid-cols-3 gap-x-6">
-                      <p>Published date<br />{auction.published}</p>
-                      <p>Start date<br />{auction.start}</p>
-                      <p>End date<br />{auction.end}</p>
+                      <p>
+                        Published date
+                        <br />
+                        {auction.published}
+                      </p>
+                      <p>
+                        Start date
+                        <br />
+                        {auction.start}
+                      </p>
+                      <p>
+                        End date
+                        <br />
+                        {auction.end}
+                      </p>
                     </div>
                   </div>
                 </div>
+
                 <div className="flex flex-col items-center justify-center">
-                  <Link href="/auctionlist" className="flex flex-col items-center text-blue-600 hover:underline">
+                  <button
+                    className="flex flex-col items-center text-blue-600 hover:underline focus:outline-none"
+                    onClick={() => {
+                      setSelectedAuction(auction);
+                      setShowBidModal(true);
+                    }}
+                  >
                     <PlusCircle size={24} />
-                    <span className="text-sm hover:text-purple-500 hover:underline">Place Bids</span>
-                  </Link>
+                    <span className="text-sm hover:text-purple-500 hover:underline">
+                      Place Bids
+                    </span>
+                  </button>
                 </div>
               </div>
 
               <div className="flex justify-around text-sm py-2 border-t border-gray-200 text-gray-800">
-                <Link href="/dashboard/buyer" className="flex items-center gap-2 hover:text-purple-500 hover:underline">
+                <Link
+                  href="/dashboard/buyer"
+                  className="flex items-center gap-2 hover:text-purple-500 hover:underline"
+                >
                   <span className="text-xl">📋</span> My Bid List
                 </Link>
-                <Link href="/auctionlist" className="flex items-center gap-2 hover:text-purple-500 hover:underline">
+                <Link
+                  href="/auctionlist"
+                  className="flex items-center gap-2 hover:text-purple-500 hover:underline"
+                >
                   <span className="text-xl">📄</span> View Vehicle List
                 </Link>
               </div>
@@ -528,15 +580,17 @@ export default function AuctionList() {
         {totalPages > 1 && (
           <div className="flex justify-center mt-6 gap-4">
             <button
-              onClick={() => paginate('prev')}
+              onClick={() => paginate("prev")}
               disabled={currentPage === 1}
               className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
             >
               Previous
             </button>
-            <span className="self-center">Page {currentPage} of {totalPages}</span>
+            <span className="self-center">
+              Page {currentPage} of {totalPages}
+            </span>
             <button
-              onClick={() => paginate('next')}
+              onClick={() => paginate("next")}
               disabled={currentPage === totalPages}
               className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
             >
@@ -544,6 +598,17 @@ export default function AuctionList() {
             </button>
           </div>
         )}
+
+        {/* PlaceBidTableModal integration */}
+        <PlaceBidTableModal
+          open={showBidModal}
+          vehicles={slotVehicles} // Replace with vehicles of selectedAuction if available
+          onClose={() => setShowBidModal(false)}
+          onPlaceBids={(bids) => {
+            // handle placed bids here
+            console.log("Placed bids:", bids);
+          }}
+        />
       </main>
     </div>
   );

@@ -28,7 +28,6 @@ export default function KYCModal() {
   });
   const [fileErrors, setFileErrors] = useState({ panPhoto: "", aadharPhoto: "" });
   const [uploading, setUploading] = useState({ panPhoto: false, aadharPhoto: false });
-
   const panInputRef = useRef(null);
   const aadharInputRef = useRef(null);
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle  } from "lucide-react";
 import {
   getUserKyc,
   getUserSubscriptions,
@@ -64,6 +64,7 @@ export default function PremiumModal() {
 
       // 2. Check subscription
       const res = await getUserSubscriptions();
+      console.log("Subscription Response:", res);
       const subscriptionList = res?.data?.data || [];
 
       if (subscriptionList.length === 0) {
@@ -71,19 +72,27 @@ export default function PremiumModal() {
         setSubscriptionStatus(null);
       } else {
         const subscriptionData = subscriptionList[0];
+          console.log("Subscription Data:", subscriptionData);
         setSubscriptionStatus(subscriptionData.status);
         setSubscriptionRemark(subscriptionData.remark || "");
 
         if (subscriptionData.status === "Pending") {
+           console.log("Subscription Status:", subscriptionData.status);
           setOpen(true); // pending subscription -> show modal
         } else if (subscriptionData.status === "Rejected") {
           setOpen(true); // rejected -> show modal with error
         } else if (subscriptionData.status === "Success") {
+             console.log("Subscription Remark:", subscriptionData.remark);
           setOpen(false); // success -> hide modal
         } else {
           setOpen(false); // other status -> hide modal
         }
       }
+
+      console.log("Subscription Data:", res);
+     
+      console.log("Subscription Remark:", subscriptionRemark);
+   
   // const [subscriptionRemark, setSubscriptionRemark] = useState("");
     } catch (error) {
       console.error("Error checking subscription:", error);
@@ -118,7 +127,7 @@ export default function PremiumModal() {
     checkSubscription();
   }, [pathname]);
 
-  // 🔥 Listen for KYC completion event
+  //  Listen for KYC completion event
   useEffect(() => {
     const handleKycComplete = async () => {
       const verified = await waitForKyc();
@@ -164,7 +173,17 @@ export default function PremiumModal() {
               You will be notified once your premium membership is activated.
             </p>
             <button
-              className="w-full py-3 bg-yellow-400 text-white rounded-xl font-semibold opacity-50 cursor-not-allowed mt-4"
+              type="button"
+              onClick={() => window.location.reload()}
+              className="flex items-center justify-center gap-2 w-full py-3 bg-yellow-500 text-white rounded-xl font-semibold hover:bg-yellow-600 transition mt-4"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1 0 19 5" />
+              </svg>
+              Refresh Status
+            </button>
+            <button
+              className="w-full py-3 bg-yellow-400 text-white rounded-xl font-semibold opacity-50 cursor-not-allowed mt-2"
               disabled
             >
               Pending

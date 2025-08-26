@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout, updateUserKycStatus ,kyc } = useAuth();
+  const { user, logout, updateUserKycStatus, kyc } = useAuth();
   const router = useRouter();
 
   const [panStatus, setPanStatus] = useState(0);
@@ -93,64 +93,64 @@ export default function KYCModal() {
   };
 
   // Submit Handler
-  const onSubmit = async (formData) => {
-    if ((panStatus !== 2 && !uploadedFiles.panPhoto) || (aadharStatus !== 2 && !uploadedFiles.aadharPhoto)) {
-      toast.error("Please upload the required documents.");
-      return;
-    }
+const onSubmit = async (formData) => {
+  if ((panStatus !== 2 && !uploadedFiles.panPhoto) || (aadharStatus !== 2 && !uploadedFiles.aadharPhoto)) {
+    toast.error("Please upload the required documents.");
+    return;
+  }
 
-    try {
-      const res = await submitKyc({
-        aadhaarNumber: formData.aadharNumber,
-        panNumber: formData.panNumber,
-        aadhaarDocumentPath: formData.aadharDocumentPath,
-        panDocumentPath: formData.panDocumentPath,
-        remark: formData.remark || "",
-      });
+  try {
+    const res = await submitKyc({
+      aadhaarNumber: formData.aadharNumber,
+      panNumber: formData.panNumber,
+      aadhaarDocumentPath: formData.aadharDocumentPath,
+      panDocumentPath: formData.panDocumentPath,
+      remark: formData.remark || "",
+    });
 
-      console.log("KYC Submission Response:", res);
+    if (res?.success) {
+      toast.success("KYC submitted successfully!");
+      
+      // ⬇️ Directly set statuses to pending (your backend usually returns this)
+      setPanStatus(1);
+      setAadharStatus(1);
 
-      router.refresh();
-      router.push("/dashboard/buyer");
-
-      if (res?.success) {
-        toast.success("KYC submitted successfully!");
-        // Poll for verification status
-        const pollKyc = async (retries = 8, delay = 2000) => {
-          for (let i = 0; i < retries; i++) {
-            try {
-              const kycRes = await getUserKyc();
-              const kycData = kycRes?.data?.data;
-              if (kycData?.panStatus === 2 && kycData?.aadhaarStatus === 2) {
-                setIsOpen(false);
-                updateUserKycStatus(2);
-                return;
-              }
-            } catch { }
-            await new Promise((resolve) => setTimeout(resolve, delay));
-          }
-        };
-        pollKyc();
-      } else {
-        throw new Error(res.message || "KYC failed");
+      // ⬇️ Optionally fetch latest from backend
+      const kycRes = await getUserKyc();
+      const kycData = kycRes?.data?.data;
+      if (kycData) {
+        setPanStatus(kycData.panStatus);
+        setAadharStatus(kycData.aadhaarStatus);
+        setAdminRemark(kycData.adminRemark || "");
       }
-    } catch (err) {
-      toast.error(err.message || "Error submitting KYC");
+    } else {
+      throw new Error(res.message || "KYC failed");
     }
-  };
+  } catch (err) {
+    toast.error(err.message || "Error submitting KYC");
+  }
+};
+
 
   useEffect(() => {
       if(kyc){
        
-        console.log("KYC already completed",kyc);
+        // console.log("KYC already completed",kyc);
          setIsOpen(false);
 
       }
   }, [kyc]);
 
 
-  // Check if KYC already exists
+  // Prevent modal from opening if KYC is already completed (localStorage or context)
   useEffect(() => {
+    const kycLocal = localStorage.getItem("kyc");
+    if (kyc === true || kycLocal === "true") {
+      setIsOpen(false);
+      return;
+    }
+
+    // Check if KYC already exists
     const checkKYC = async () => {
       try {
         const res = await getUserKyc();
@@ -188,28 +188,22 @@ export default function KYCModal() {
           setIsOpen(true);
         }
       } catch (error) {
-        //  API error → Assume no KYC, force open
         setIsOpen(true);
       }
     };
 
-    const user = localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : null;
-
-    if (!user) {
+    const userObj = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+    if (!userObj) {
       setIsOpen(false);
       return;
     }
-
     if (!localStorage.getItem("token")) {
       setIsOpen(false);
       logout();
       return;
     }
-
     checkKYC();
-  }, [user, logout, updateUserKycStatus]);
+  }, [user, logout, updateUserKycStatus, kyc]);
 
 
   useEffect(() => {
@@ -219,7 +213,52 @@ export default function KYCModal() {
   }, [panStatus, aadharStatus]);
 
 
+
+     const checkKYC = async () => {
+      try {
+        const res = await getUserKyc();
+        const kycData = res?.data?.data;
+
+        if (kycData) {
+          const panStat = kycData.panStatus;
+          const aadharStat = kycData.aadhaarStatus;
+
+          setPanStatus(panStat);
+          setAadharStatus(aadharStat);
+          setAdminRemark(kycData.adminRemark);
+
+          if (panStat === 2 && aadharStat === 2) {
+            // ✅ Both verified → Close modal
+            setIsOpen(false);
+            window.location.reload();
+            updateUserKycStatus(2);
+          } else {
+            //  Not verified → Open modal
+            setIsOpen(true);
+
+            if (panStat === 3) {
+              setPanRejectionMessage(
+                kycData.adminRemark || "PAN Rejected. Please upload again."
+              );
+            }
+            if (aadharStat === 3) {
+              setAadharRejectionMessage(
+                kycData.adminRemark || "Aadhar Rejected. Please upload again."
+              );
+            }
+          }
+        } else {
+          //  No KYC record → Force open
+          setIsOpen(true);
+        }
+      } catch (error) {
+        setIsOpen(true);
+      }
+    };
+
   if (!isOpen) return null;
+
+
 
   return (
     <Dialog
@@ -231,8 +270,25 @@ export default function KYCModal() {
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
 
       <Dialog.Panel className="relative w-full max-w-md rounded-2xl bg-white text-black p-6 shadow-xl transition">
-        <Dialog.Title className="text-2xl font-bold text-center mb-6">
+        <Dialog.Title className="text-2xl font-bold text-center mb-6 flex items-center justify-center gap-2">
           KYC Verification
+          <button
+            type="button"
+            onClick={async () => {
+              await checkKYC();
+              if (panStatus === 2 && aadharStatus === 2) {
+                // window.location.reload();
+                console.log("KYC verified, closing modal");
+                router.refresh();
+              }
+            }}
+            className="ml-2 p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+            title="Refresh KYC Status"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-blue-700">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 1 0 19 5" />
+            </svg>
+          </button>
         </Dialog.Title>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

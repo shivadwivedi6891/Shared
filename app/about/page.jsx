@@ -1,3 +1,10 @@
+// export async function generateMetadata() {
+//   return {
+//     title: "About | Shared Auction Platform",
+//     description: "Learn more about our vehicle auction platform.",
+//     robots: "index, follow"
+//   };
+// }
 'use client'
 
 import Link from 'next/link';

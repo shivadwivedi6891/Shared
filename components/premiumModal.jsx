@@ -14,6 +14,7 @@ export default function PremiumModal() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [open, setOpen] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+   const [subscriptionRemark, setSubscriptionRemark] = useState("");
   const pathname = usePathname();
   const router = useRouter();
 
@@ -71,13 +72,19 @@ export default function PremiumModal() {
       } else {
         const subscriptionData = subscriptionList[0];
         setSubscriptionStatus(subscriptionData.status);
+        setSubscriptionRemark(subscriptionData.remark || "");
 
         if (subscriptionData.status === "Pending") {
           setOpen(true); // pending subscription -> show modal
+        } else if (subscriptionData.status === "Rejected") {
+          setOpen(true); // rejected -> show modal with error
+        } else if (subscriptionData.status === "Success") {
+          setOpen(false); // success -> hide modal
         } else {
-          setOpen(false); // active/other status -> hide modal
+          setOpen(false); // other status -> hide modal
         }
       }
+  // const [subscriptionRemark, setSubscriptionRemark] = useState("");
     } catch (error) {
       console.error("Error checking subscription:", error);
       setOpen(true);
@@ -130,7 +137,43 @@ export default function PremiumModal() {
 
   return (
     <>
-      {step === "plans" && (
+      {step === "plans" && subscriptionStatus === "Rejected" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
+            <h3 className="text-2xl font-bold">Premium Subscription Rejected</h3>
+            <p className="text-sm">
+              {subscriptionRemark ? subscriptionRemark : "Your subscription was rejected by admin."}
+            </p>
+            <button
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:scale-105 transition mt-4"
+              onClick={() => handlePlanSelect(plans[0])}
+            >
+              Re-Apply for Premium
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === "plans" && subscriptionStatus === "Pending" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-yellow-300 dark:border-yellow-700">
+            <CheckCircle className="text-yellow-500 w-12 h-12 mx-auto" />
+            <h3 className="text-2xl font-bold">Premium Membership Pending</h3>
+            <p className="text-sm">
+              Your payment is being processed. Please wait for admin approval.<br />
+              You will be notified once your premium membership is activated.
+            </p>
+            <button
+              className="w-full py-3 bg-yellow-400 text-white rounded-xl font-semibold opacity-50 cursor-not-allowed mt-4"
+              disabled
+            >
+              Pending
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === "plans" && (!subscriptionStatus || subscriptionStatus !== "Pending") && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="relative bg-white dark:bg-gray-900 text-black dark:text-white p-10 rounded-2xl w-full max-w-2xl border border-gray-200 dark:border-white/10 space-y-6 shadow-xl">
             <div className="text-center space-y-2">
@@ -148,10 +191,9 @@ export default function PremiumModal() {
                 <button
                   key={plan.id}
                   onClick={() => handlePlanSelect(plan)}
-                  disabled={subscriptionStatus === 'Pending'}
-                  className={`px-4 py-6 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-xl transition shadow-md ${subscriptionStatus === 'Pending' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}>
+                  className="px-4 py-6 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold rounded-xl hover:scale-105 transition shadow-md">
                   <div className="text-lg font-bold mb-1">{plan.name}</div>
-                  <div className="text-sm">{subscriptionStatus === 'Pending' ? 'Pending' : plan.price}</div>
+                  <div className="text-sm">{plan.price}</div>
                 </button>
               ))}
             </div>

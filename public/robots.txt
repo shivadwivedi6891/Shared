@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://carauctionuser.ezulix.com
+
+# Sitemaps
+Sitemap: https://carauctionuser.ezulix.com/sitemap.xml

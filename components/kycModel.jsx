@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { Upload, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import { getUserKyc, submitKyc, uploadKycFile } from "@/services/AuthServices/AuthApiFunction";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user,logout,updateUserKycStatus } = useAuth();
+  const { user, logout, updateUserKycStatus ,kyc } = useAuth();
   const router = useRouter();
 
   const [panStatus, setPanStatus] = useState(0);
@@ -70,11 +70,13 @@ export default function KYCModal() {
 
     try {
       const auth = localStorage.getItem("user")
-      if(!auth) {
+      if (!auth) {
         setIsOpen(false);
         logout();
         return;
       }
+
+    
       const data = await uploadKycFile(file);
       if (data?.data?.filePath) {
         setUploadedFiles((prev) => ({ ...prev, [type]: true }));
@@ -121,7 +123,7 @@ export default function KYCModal() {
                 updateUserKycStatus(2);
                 return;
               }
-            } catch {}
+            } catch { }
             await new Promise((resolve) => setTimeout(resolve, delay));
           }
         };
@@ -134,74 +136,84 @@ export default function KYCModal() {
     }
   };
 
+  useEffect(() => {
+      if(kyc){
+       
+        console.log("KYC already completed",kyc);
+         setIsOpen(false);
+
+      }
+  }, [kyc]);
+
+
   // Check if KYC already exists
-useEffect(() => {
-  const checkKYC = async () => {
-    try {
-      const res = await getUserKyc();
-      const kycData = res?.data?.data;
+  useEffect(() => {
+    const checkKYC = async () => {
+      try {
+        const res = await getUserKyc();
+        const kycData = res?.data?.data;
 
-      if (kycData) {
-        const panStat = kycData.panStatus;
-        const aadharStat = kycData.aadhaarStatus;
+        if (kycData) {
+          const panStat = kycData.panStatus;
+          const aadharStat = kycData.aadhaarStatus;
 
-        setPanStatus(panStat);
-        setAadharStatus(aadharStat);
-        setAdminRemark(kycData.adminRemark);
+          setPanStatus(panStat);
+          setAadharStatus(aadharStat);
+          setAdminRemark(kycData.adminRemark);
 
-        if (panStat === 2 && aadharStat === 2) {
-          // ✅ Both verified → Close modal
-          setIsOpen(false);
-          updateUserKycStatus(2);
+          if (panStat === 2 && aadharStat === 2) {
+            // ✅ Both verified → Close modal
+            setIsOpen(false);
+            updateUserKycStatus(2);
+          } else {
+            //  Not verified → Open modal
+            setIsOpen(true);
+
+            if (panStat === 3) {
+              setPanRejectionMessage(
+                kycData.adminRemark || "PAN Rejected. Please upload again."
+              );
+            }
+            if (aadharStat === 3) {
+              setAadharRejectionMessage(
+                kycData.adminRemark || "Aadhar Rejected. Please upload again."
+              );
+            }
+          }
         } else {
-          // ❌ Not verified → Open modal
+          //  No KYC record → Force open
           setIsOpen(true);
-
-          if (panStat === 3) {
-            setPanRejectionMessage(
-              kycData.panRejectionReason || "PAN Rejected. Please upload again."
-            );
-          }
-          if (aadharStat === 3) {
-            setAadharRejectionMessage(
-              kycData.adminRemark || "Aadhar Rejected. Please upload again."
-            );
-          }
         }
-      } else {
-        // 🚨 No KYC record → Force open
+      } catch (error) {
+        //  API error → Assume no KYC, force open
         setIsOpen(true);
       }
-    } catch (error) {
-      // 🚨 API error → Assume no KYC, force open
-      setIsOpen(true);
+    };
+
+    const user = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+
+    if (!user) {
+      setIsOpen(false);
+      return;
     }
-  };
 
-  const user = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))
-    : null;
+    if (!localStorage.getItem("token")) {
+      setIsOpen(false);
+      logout();
+      return;
+    }
 
-  if (!user) {
-    setIsOpen(false);
-    return;
-  }
+    checkKYC();
+  }, [user, logout, updateUserKycStatus]);
 
-  if (!localStorage.getItem("token")) {
-    setIsOpen(false);
-    logout();
-    return;
-  }
 
-  checkKYC();
-}, [user, logout, updateUserKycStatus]);
-
-useEffect(() => {
-  if (panStatus === 2 && aadharStatus === 2) {
-    setIsOpen(false);
-  }
-}, [panStatus, aadharStatus]);
-
+  useEffect(() => {
+    if (panStatus === 2 && aadharStatus === 2) {
+      setIsOpen(false);
+    }
+  }, [panStatus, aadharStatus]);
 
 
   if (!isOpen) return null;
@@ -209,7 +221,7 @@ useEffect(() => {
   return (
     <Dialog
       open={isOpen}
-      onClose={() => {}}
+      onClose={() => { }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
     >
       {/* Background Blur */}
@@ -266,7 +278,7 @@ useEffect(() => {
                         type="button"
                         onClick={() => {
                           if (panStatus === 3) {
-                            setPanStatus(0); 
+                            setPanStatus(0);
                           }
                           panInputRef.current?.click();
                         }}
@@ -294,63 +306,63 @@ useEffect(() => {
           <div>
             <label className="block mb-1 text-sm font-medium">Aadhar Verification</label>
             {aadharStatus === 1 ? (
-                <div className="text-center p-4 border-2 border-dashed rounded-lg">
-                    <p className="text-yellow-600 font-semibold">Your Aadhar verification is pending.</p>
-                </div>
+              <div className="text-center p-4 border-2 border-dashed rounded-lg">
+                <p className="text-yellow-600 font-semibold">Your Aadhar verification is pending.</p>
+              </div>
             ) : aadharStatus === 2 ? (
-                <div className="text-center p-4 border-2 border-dashed rounded-lg">
-                    <p className="text-green-600 font-semibold">Your Aadhar is verified.</p>
-                </div>
+              <div className="text-center p-4 border-2 border-dashed rounded-lg">
+                <p className="text-green-600 font-semibold">Your Aadhar is verified.</p>
+              </div>
             ) : (
-                <>
-                    {aadharStatus === 3 && <p className="text-red-500 text-center mb-2">{aadharRejectionMessage}</p>}
-                    <input
-                    type="text"
-                    maxLength={12}
-                    {...register("aadharNumber", {
-                        required: "Aadhar is required",
-                        validate: (val) => validateAadhar(val) || "Aadhar must be 12 digits",
-                    })}
-                    onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        setValue("aadharNumber", value, { shouldValidate: true });
-                        trigger("aadharNumber");
-                    }}
-                    className="w-full px-4 py-2 border rounded-lg"
-                    placeholder="Enter Aadhar number"
-                    />
-                    {errors.aadharNumber && (
-                    <p className="text-xs text-red-500 mt-1">{errors.aadharNumber.message}</p>
-                    )}
+              <>
+                {aadharStatus === 3 && <p className="text-red-500 text-center mb-2">{aadharRejectionMessage}</p>}
+                <input
+                  type="text"
+                  maxLength={12}
+                  {...register("aadharNumber", {
+                    required: "Aadhar is required",
+                    validate: (val) => validateAadhar(val) || "Aadhar must be 12 digits",
+                  })}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    setValue("aadharNumber", value, { shouldValidate: true });
+                    trigger("aadharNumber");
+                  }}
+                  className="w-full px-4 py-2 border rounded-lg"
+                  placeholder="Enter Aadhar number"
+                />
+                {errors.aadharNumber && (
+                  <p className="text-xs text-red-500 mt-1">{errors.aadharNumber.message}</p>
+                )}
 
-                    <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
-                    {uploadedFiles.aadharPhoto ? (
-                        <div className="flex items-center justify-center text-green-600">
-                        <CheckCircle className="h-5 w-5 mr-2" /> <span>Aadhar Uploaded</span>
-                        </div>
-                    ) : (
-                        <>
-                        <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400" />
-                        <button
-                            type="button"
-                            onClick={() => aadharInputRef.current?.click()}
-                            className="px-4 py-1 bg-blue-600 text-white rounded"
-                        >
-                            {uploading.aadharPhoto ? "Uploading..." : "Choose File"}
-                        </button>
-                        <input
-                            type="file"
-                            ref={aadharInputRef}
-                            className="hidden"
-                            onChange={(e) => handleFileChange(e, "aadharPhoto")}
-                        />
-                        {fileErrors.aadharPhoto && (
-                            <p className="text-xs text-red-500 mt-2">{fileErrors.aadharPhoto}</p>
-                        )}
-                        </>
-                    )}
+                <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
+                  {uploadedFiles.aadharPhoto ? (
+                    <div className="flex items-center justify-center text-green-600">
+                      <CheckCircle className="h-5 w-5 mr-2" /> <span>Aadhar Uploaded</span>
                     </div>
-                </>
+                  ) : (
+                    <>
+                      <Upload className="h-6 w-6 mx-auto mb-2 text-gray-400" />
+                      <button
+                        type="button"
+                        onClick={() => aadharInputRef.current?.click()}
+                        className="px-4 py-1 bg-blue-600 text-white rounded"
+                      >
+                        {uploading.aadharPhoto ? "Uploading..." : "Choose File"}
+                      </button>
+                      <input
+                        type="file"
+                        ref={aadharInputRef}
+                        className="hidden"
+                        onChange={(e) => handleFileChange(e, "aadharPhoto")}
+                      />
+                      {fileErrors.aadharPhoto && (
+                        <p className="text-xs text-red-500 mt-2">{fileErrors.aadharPhoto}</p>
+                      )}
+                    </>
+                  )}
+                </div>
+              </>
             )}
           </div>
 

@@ -52,8 +52,8 @@ export default function PremiumModal() {
       const kycRes = await getUserKyc();
       const kycData = kycRes?.data?.data;
 
-      console.log("KYC Response:", kycRes);
-      console.log("KYC Data: from bank", kycData);
+      // console.log("KYC Response:", kycRes);
+      // console.log("KYC Data: from bank", kycData);
 
 
 
@@ -64,7 +64,7 @@ export default function PremiumModal() {
 
       // 2. Check subscription
       const res = await getUserSubscriptions();
-      console.log("Subscription Response:", res);
+      // console.log("Subscription Response:", res);
       const subscriptionList = res?.data?.data || [];
 
       if (subscriptionList.length === 0) {
@@ -72,26 +72,26 @@ export default function PremiumModal() {
         setSubscriptionStatus(null);
       } else {
         const subscriptionData = subscriptionList[0];
-          console.log("Subscription Data:", subscriptionData);
+          // console.log("Subscription Data:", subscriptionData);
         setSubscriptionStatus(subscriptionData.status);
         setSubscriptionRemark(subscriptionData.remark || "");
 
         if (subscriptionData.status === "Pending") {
-           console.log("Subscription Status:", subscriptionData.status);
+           // console.log("Subscription Status:", subscriptionData.status);
           setOpen(true); // pending subscription -> show modal
         } else if (subscriptionData.status === "Rejected") {
           setOpen(true); // rejected -> show modal with error
         } else if (subscriptionData.status === "Success") {
-             console.log("Subscription Remark:", subscriptionData.remark);
+             // console.log("Subscription Remark:", subscriptionData.remark);
           setOpen(false); // success -> hide modal
         } else {
           setOpen(false); // other status -> hide modal
         }
       }
 
-      console.log("Subscription Data:", res);
+      // console.log("Subscription Data:", res);
      
-      console.log("Subscription Remark:", subscriptionRemark);
+      // console.log("Subscription Remark:", subscriptionRemark);
    
   // const [subscriptionRemark, setSubscriptionRemark] = useState("");
     } catch (error) {

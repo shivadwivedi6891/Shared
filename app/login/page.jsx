@@ -86,7 +86,7 @@ export default function LoginPage() {
     try {
       setSendingOtp(true);
       const res = await sendOtp(phone);
-      console.log('OTP Response:', res);
+      // console.log('OTP Response:', res);
       if (res.data.success) {
         toast.success(`OTP sent to +91-${phone}`);
         setOtpSent(true);
@@ -126,7 +126,7 @@ export default function LoginPage() {
         otp: data.otp,
       });
 
-      console.log('Login Response:', res.data);
+      // console.log('Login Response:', res.data);
      
 
       if (res.data.success) {

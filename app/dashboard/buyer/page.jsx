@@ -43,11 +43,11 @@ export default function BuyerDashboard() {
 
   const [subscription, setSubscription] = useState(false);
 
-  // ✅ Load subscription status from localStorage
+  //  Load subscription status from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('subscription');
-      console.log('Loaded subscription status:', stored);
+      // console.log('Loaded subscription status:', stored);
       setSubscription(stored === 'true'); // ensures boolean
     }
   }, []);

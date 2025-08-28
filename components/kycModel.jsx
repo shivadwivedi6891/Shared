@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
-import { Upload, CheckCircle } from "lucide-react";
+import { Upload, CheckCircle, LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 import { set, useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
@@ -165,7 +165,7 @@ const onSubmit = async (formData) => {
           setAdminRemark(kycData.adminRemark);
 
           if (panStat === 2 && aadharStat === 2) {
-            // ✅ Both verified → Close modal
+            //  Both verified → Close modal
             setIsOpen(false);
             updateUserKycStatus(2);
           } else {
@@ -270,6 +270,17 @@ const onSubmit = async (formData) => {
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
 
       <Dialog.Panel className="relative w-full max-w-md rounded-2xl bg-white text-black p-6 shadow-xl transition">
+        <button
+          type="button"
+          onClick={() => {
+            logout();
+            setIsOpen(false);
+          }}
+          className="absolute top-4 right-4 p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-800"
+          title="Logout"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
         <Dialog.Title className="text-2xl font-bold text-center mb-6 flex items-center justify-center gap-2">
           KYC Verification
           <button
@@ -438,7 +449,7 @@ const onSubmit = async (formData) => {
             </div>
           )}
 
-          {!(panStatus === 1 || aadharStatus === 1) && (
+          {/* {!(panStatus === 1 || aadharStatus === 1) && (
             <div>
               <label className="block mb-1 text-sm font-medium">Remark (optional)</label>
               <textarea
@@ -448,7 +459,7 @@ const onSubmit = async (formData) => {
                 rows={3}
               />
             </div>
-          )}
+          )} */}
 
           {!(panStatus === 1 && aadharStatus === 1) && (
             <button

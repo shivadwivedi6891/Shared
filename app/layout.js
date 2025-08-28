@@ -34,15 +34,15 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <Navbar />
     
-            <div className="relative min-h-screen">
-          <PageLoader />
-          {children}
-        </div>
-                 <Toaster position="top-center" reverseOrder={false} />
-            <Footer />
+               <div className="relative min-h-screen">
+                 <PageLoader />
+                    {children}
+                      </div>
+                   <Toaster position="top-center" reverseOrder={false} />
+                  <Footer />
   
-            <KYCModal />
-               <PremiumModal />
+               <KYCModal />
+             <PremiumModal />
           </AuthProvider>
         </ThemeProvider>
       </body>

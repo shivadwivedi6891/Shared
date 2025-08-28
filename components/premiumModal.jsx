@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { CheckCircle  } from "lucide-react";
+import { CheckCircle, LogOut } from "lucide-react";
 import {
   getUserKyc,
   getUserSubscriptions,
@@ -144,10 +144,23 @@ export default function PremiumModal() {
 
   if (!open) return null;
 
+  // Height of navbar (adjust if your navbar height changes)
+  const NAVBAR_HEIGHT = 64; // px
+
   return (
     <>
+      {/* Overlay: covers everything except navbar */}
+      <div
+        className="fixed left-0 right-0 z-50 bg-black/70 backdrop-blur-sm"
+        style={{ top: NAVBAR_HEIGHT, bottom: 0, pointerEvents: 'auto' }}
+      />
+
+      {/* Modal content: always visible, cannot be closed */}
       {step === "plans" && subscriptionStatus === "Rejected" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div
+          className="fixed left-0 right-0 z-[51] flex items-center justify-center"
+          style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
+        >
           <div className="bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
             <h3 className="text-2xl font-bold">Premium Subscription Rejected</h3>
             <p className="text-sm">
@@ -164,7 +177,10 @@ export default function PremiumModal() {
       )}
 
       {step === "plans" && subscriptionStatus === "Pending" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div
+          className="fixed left-0 right-0 z-[51] flex items-center justify-center"
+          style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
+        >
           <div className="bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-yellow-300 dark:border-yellow-700">
             <CheckCircle className="text-yellow-500 w-12 h-12 mx-auto" />
             <h3 className="text-2xl font-bold">Premium Membership Pending</h3>
@@ -193,7 +209,10 @@ export default function PremiumModal() {
       )}
 
       {step === "plans" && (!subscriptionStatus || subscriptionStatus !== "Pending") && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div
+          className="fixed left-0 right-0 z-[51] flex items-center justify-center"
+          style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
+        >
           <div className="relative bg-white dark:bg-gray-900 text-black dark:text-white p-10 rounded-2xl w-full max-w-2xl border border-gray-200 dark:border-white/10 space-y-6 shadow-xl">
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
@@ -221,7 +240,10 @@ export default function PremiumModal() {
       )}
 
       {step === "success" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div
+          className="fixed left-0 right-0 z-[51] flex items-center justify-center"
+          style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
+        >
           <div className="bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-gray-200 dark:border-white/10">
             <CheckCircle className="text-green-500 w-12 h-12 mx-auto" />
             <h3 className="text-2xl font-bold">Premium Membership Activated</h3>

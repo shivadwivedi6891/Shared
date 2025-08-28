@@ -292,12 +292,7 @@ export default function AuctionPage() {
                         return;
                       }
 
-                      const isPremium = localStorage.getItem('subscription') === 'true';
-                      if (!isPremium) {
-                        alert('⚠ You must complete Premium Membership to place bids.');
-                        router.push('/dashboard/buyer');
-                        return;
-                      }
+                     
 
                       const bidCountKey = `user_bid_count_${user.id}`;
                       const currentBidCount = parseInt(localStorage.getItem(bidCountKey)) || 0;
@@ -314,7 +309,7 @@ export default function AuctionPage() {
                     }}
                     disabled={!isBidValid}
                     className={`flex-1 py-2 rounded-lg text-white ${isBidValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed'}`}
-                  >
+                  >  b
                     Place Bid
                   </button>
                 </div>

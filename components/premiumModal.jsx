@@ -78,14 +78,14 @@ export default function PremiumModal() {
 
         if (subscriptionData.status === "Pending") {
            // console.log("Subscription Status:", subscriptionData.status);
-          setOpen(true); // pending subscription -> show modal
+          setOpen(true); 
         } else if (subscriptionData.status === "Rejected") {
-          setOpen(true); // rejected -> show modal with error
+          setOpen(true); 
         } else if (subscriptionData.status === "Success") {
              // console.log("Subscription Remark:", subscriptionData.remark);
-          setOpen(false); // success -> hide modal
+          setOpen(false);
         } else {
-          setOpen(false); // other status -> hide modal
+          setOpen(false);
         }
       }
 
@@ -93,7 +93,7 @@ export default function PremiumModal() {
      
       // console.log("Subscription Remark:", subscriptionRemark);
    
-  // const [subscriptionRemark, setSubscriptionRemark] = useState("");
+
     } catch (error) {
       console.error("Error checking subscription:", error);
       setOpen(true);

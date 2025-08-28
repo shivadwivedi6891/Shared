@@ -1,10 +1,3 @@
-// export async function generateMetadata() {
-//   return {
-//     title: "About | Shared Auction Platform",
-//     description: "Learn more about our vehicle auction platform.",
-//     robots: "index, follow"
-//   };
-// }
 'use client'
 
 import Link from 'next/link';
@@ -33,7 +26,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold mb-6 text-black">Our Story</h2>
           <p className="text-gray-700 mb-8 leading-relaxed">
-            Founded in 2024, Premium Car Auctions was born from a passion for performance, luxury, and transparency.
+            Founded in 2025, Premium Car Auctions was born from a passion for performance, luxury, and transparency.
             We’ve built a trusted marketplace that connects car enthusiasts, collectors, and dealers through
             real-time bidding. Whether it’s a rare supercar or a pristine classic, our platform ensures that every vehicle
             tells a story — and finds the right owner.

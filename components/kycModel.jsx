@@ -338,7 +338,7 @@ const onSubmit = async (formData) => {
 
                 <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
                   {uploadedFiles.panPhoto ? (
-                    <div className="flex items-center justify-center text-green-600">
+                    <div className="flex items-center justify-center text-yellow-600">
                       <CheckCircle className="h-5 w-5 mr-2" /> <span>PAN Uploaded</span>
                     </div>
                   ) : (
@@ -407,7 +407,7 @@ const onSubmit = async (formData) => {
 
                 <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
                   {uploadedFiles.aadharPhoto ? (
-                    <div className="flex items-center justify-center text-green-600">
+                    <div className="flex items-center justify-center text-yellow-600">
                       <CheckCircle className="h-5 w-5 mr-2" /> <span>Aadhar Uploaded</span>
                     </div>
                   ) : (

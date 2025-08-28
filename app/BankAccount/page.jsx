@@ -60,7 +60,7 @@ export default function SubscriptionPage() {
       const res = await subscribePlan(body);
       if (res.data.success) {
         message.success("Subscription activated successfully!");
-        localStorage.setItem("subscription", true);
+        // localStorage.setItem("subscription", true);
         setShowSuccess(true);
         setTimeout(() => router.push("/dashboard/buyer"), 1500);
       } else {

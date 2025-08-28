@@ -438,18 +438,6 @@ const onSubmit = async (formData) => {
             </div>
           )}
 
-          {!(panStatus === 1 || aadharStatus === 1) && (
-            <div>
-              <label className="block mb-1 text-sm font-medium">Remark (optional)</label>
-              <textarea
-                {...register("remark")}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Any additional remarks"
-                rows={3}
-              />
-            </div>
-          )}
-
           {!(panStatus === 1 && aadharStatus === 1) && (
             <button
               type="submit"

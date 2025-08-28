@@ -14,6 +14,38 @@ export default function PlaceBidTableModal({ vehicles = [], open, onClose, onPla
     }));
   };
 
+  const getIncrement = (category) => {
+    if (category === "Bike" || category === "2 Wheeler" || category === "Bike/2 Wheelers") return 2000;
+    if (category === "Car") return 5000;
+    if (category === "Lot" || category === "HCV/LCV" || category === "construction-equipments" || category === "Construction Equipment’s") return 10000;
+    return 1000;
+  };
+
+  const handleIncrease = (vehicle) => {
+    setBids((prev) => {
+      const current = Number(prev[vehicle.id]) || Number(vehicle.startingBid) || 0;
+      const increment = getIncrement(vehicle.category);
+      return {
+        ...prev,
+        [vehicle.id]: current + increment,
+      };
+    });
+  };
+
+  const handleDecrease = (vehicle) => {
+    setBids((prev) => {
+      const current = Number(prev[vehicle.id]) || Number(vehicle.startingBid) || 0;
+      const increment = getIncrement(vehicle.category);
+      const min = Number(vehicle.startingBid) || 0;
+      let next = current - increment;
+      if (next < min) next = min;
+      return {
+        ...prev,
+        [vehicle.id]: next,
+      };
+    });
+  };
+
   const handlePlaceBids = () => {
     // Collect all bids and pass to parent
     const placedBids = vehicles
@@ -71,9 +103,10 @@ export default function PlaceBidTableModal({ vehicles = [], open, onClose, onPla
                     <input
                       type="number"
                       min={vehicle.startingBid || 0}
+                      step={getIncrement(vehicle.category)}
                       value={bids[vehicle.id] || ""}
                       onChange={(e) => handleBidChange(vehicle.id, e.target.value)}
-                      className="w-28 px-2 py-1 border rounded"
+                      className="w-28 px-2 py-1 border rounded text-center"
                       placeholder="Enter bid"
                     />
                   </td>

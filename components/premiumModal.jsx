@@ -161,7 +161,18 @@ export default function PremiumModal() {
           className="fixed left-0 right-0 z-[51] flex items-center justify-center"
           style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
         >
-          <div className="bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
+          <div className="relative bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="absolute top-4 right-4 p-2 text-red-900 rounded-full hover:bg-red-200"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
             <h3 className="text-2xl font-bold">Premium Subscription Rejected</h3>
             <p className="text-sm">
               {subscriptionRemark ? subscriptionRemark : "Your subscription was rejected by admin."}
@@ -181,7 +192,18 @@ export default function PremiumModal() {
           className="fixed left-0 right-0 z-[51] flex items-center justify-center"
           style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
         >
-          <div className="bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-yellow-300 dark:border-yellow-700">
+          <div className="relative bg-yellow-100 text-yellow-900 dark:bg-yellow-900 dark:text-yellow-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-yellow-300 dark:border-yellow-700">
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="absolute top-4 right-4 p-2 text-yellow-900 rounded-full hover:bg-yellow-200"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
             <CheckCircle className="text-yellow-500 w-12 h-12 mx-auto" />
             <h3 className="text-2xl font-bold">Premium Membership Pending</h3>
             <p className="text-sm">
@@ -214,6 +236,17 @@ export default function PremiumModal() {
           style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
         >
           <div className="relative bg-white dark:bg-gray-900 text-black dark:text-white p-10 rounded-2xl w-full max-w-2xl border border-gray-200 dark:border-white/10 space-y-6 shadow-xl">
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="absolute top-4 right-4 p-2 text-gray-500 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
                 Upgrade Your Experience
@@ -244,7 +277,18 @@ export default function PremiumModal() {
           className="fixed left-0 right-0 z-[51] flex items-center justify-center"
           style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
         >
-          <div className="bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-gray-200 dark:border-white/10">
+          <div className="relative bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-gray-200 dark:border-white/10">
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="absolute top-4 right-4 p-2 text-gray-500 rounded-full hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
             <CheckCircle className="text-green-500 w-12 h-12 mx-auto" />
             <h3 className="text-2xl font-bold">Premium Membership Activated</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">

@@ -14,7 +14,9 @@ export default function PremiumModal() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [open, setOpen] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
-   const [subscriptionRemark, setSubscriptionRemark] = useState("");
+  const [subscriptionRemark, setSubscriptionRemark] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const pathname = usePathname();
   const router = useRouter();
 
@@ -31,18 +33,22 @@ export default function PremiumModal() {
   };
 
   const checkSubscription = async () => {
+    setIsLoading(true);
+    setApiError("");
     const user = localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
       : null;
 
     if (!user) {
       setOpen(false);
+      setIsLoading(false);
       logout();
       return;
     }
 
     if (!token) {
       setOpen(false);
+      setIsLoading(false);
       logout();
       return;
     }
@@ -52,19 +58,14 @@ export default function PremiumModal() {
       const kycRes = await getUserKyc();
       const kycData = kycRes?.data?.data;
 
-      // console.log("KYC Response:", kycRes);
-      // console.log("KYC Data: from bank", kycData);
-
-
-
       if (!kycData || kycData.aadhaarStatus !== 2 || kycData.panStatus !== 2) {
         setOpen(false);
+        setIsLoading(false);
         return;
       }
 
       // 2. Check subscription
       const res = await getUserSubscriptions();
-      // console.log("Subscription Response:", res);
       const subscriptionList = res?.data?.data || [];
 
       if (subscriptionList.length === 0) {
@@ -72,31 +73,25 @@ export default function PremiumModal() {
         setSubscriptionStatus(null);
       } else {
         const subscriptionData = subscriptionList[0];
-          // console.log("Subscription Data:", subscriptionData);
         setSubscriptionStatus(subscriptionData.status);
         setSubscriptionRemark(subscriptionData.remark || "");
 
         if (subscriptionData.status === "Pending") {
-           // console.log("Subscription Status:", subscriptionData.status);
           setOpen(true); 
         } else if (subscriptionData.status === "Rejected") {
           setOpen(true); 
         } else if (subscriptionData.status === "Success") {
-             // console.log("Subscription Remark:", subscriptionData.remark);
           setOpen(false);
         } else {
           setOpen(false);
         }
       }
-
-      // console.log("Subscription Data:", res);
-     
-      // console.log("Subscription Remark:", subscriptionRemark);
-   
-
     } catch (error) {
       console.error("Error checking subscription:", error);
-      setOpen(true);
+      setApiError("Unable to fetch KYC details. Please check your connection or try again.");
+      setOpen(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,17 +137,46 @@ export default function PremiumModal() {
     };
   }, []);
 
-  if (!open) return null;
 
+  
+  
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-gray-200 dark:border-white/10 flex flex-col items-center justify-center">
+          <svg className="animate-spin h-8 w-8 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          <h3 className="text-xl font-bold mb-2">Checking your KYC status...</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Please wait while we verify your KYC details.</p>
+          {apiError && (
+            <div className="mt-4 text-red-600 dark:text-red-400 text-sm">
+              {apiError}
+              <button
+                className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={checkSubscription}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+if (!open) return null;
   // Height of navbar (adjust if your navbar height changes)
   const NAVBAR_HEIGHT = 64; // px
+
+
 
   return (
     <>
       {/* Overlay: covers everything except navbar */}
       <div
         className="fixed left-0 right-0 z-50 bg-black/70 backdrop-blur-sm"
-        style={{ top: NAVBAR_HEIGHT, bottom: 0, pointerEvents: 'auto' }}
+        style={{ top:0, bottom: 0, pointerEvents: 'auto' }}
       />
 
       {/* Modal content: always visible, cannot be closed */}
@@ -161,14 +185,14 @@ export default function PremiumModal() {
           className="fixed left-0 right-0 z-[51] flex items-center justify-center"
           style={{ top: NAVBAR_HEIGHT, bottom: 0 }}
         >
-          <div className="relative bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
+          <div className="relative bg-red-100 text-black-900 dark:bg-red-900 dark:text-red-100 w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-red-300 dark:border-red-700">
             <button
               type="button"
               onClick={() => {
                 logout();
                 setOpen(false);
               }}
-              className="absolute top-4 right-4 p-2 text-red-900 rounded-full hover:bg-red-200"
+              className="absolute top-4 right-4 p-2 text-red-900 rounded-full bg-black"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />
@@ -199,7 +223,7 @@ export default function PremiumModal() {
                 logout();
                 setOpen(false);
               }}
-              className="absolute top-4 right-4 p-2 text-yellow-900 rounded-full hover:bg-yellow-200"
+              className="absolute top-4 right-4 p-2 text-black-900 rounded-fullbg-yellow-200"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />

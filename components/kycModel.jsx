@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 
 export default function KYCModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
   const { user, logout, updateUserKycStatus, kyc } = useAuth();
   const router = useRouter();
 
@@ -152,6 +154,8 @@ const onSubmit = async (formData) => {
 
     // Check if KYC already exists
     const checkKYC = async () => {
+      setIsLoading(true);
+      setApiError("");
       try {
         const res = await getUserKyc();
         const kycData = res?.data?.data;
@@ -188,7 +192,10 @@ const onSubmit = async (formData) => {
           setIsOpen(true);
         }
       } catch (error) {
-        setIsOpen(true);
+        setApiError("Unable to fetch KYC details. Please check your connection or try again.");
+        setIsOpen(false);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -256,8 +263,34 @@ const onSubmit = async (formData) => {
       }
     };
 
-  if (!isOpen) return null;
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-md rounded-2xl p-8 shadow-xl text-center space-y-4 border border-gray-200 dark:border-white/10 flex flex-col items-center justify-center">
+          <svg className="animate-spin h-8 w-8 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          <h3 className="text-xl font-bold mb-2">Checking your KYC status...</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Please wait while we verify your KYC details.</p>
+          {apiError && (
+            <div className="mt-4 text-red-600 dark:text-red-400 text-sm">
+              {apiError}
+              <button
+                className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={checkKYC}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+    if (!isOpen) return null;
 
 
   return (

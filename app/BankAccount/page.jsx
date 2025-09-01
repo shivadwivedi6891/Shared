@@ -59,12 +59,12 @@ export default function SubscriptionPage() {
 
       const res = await subscribePlan(body);
       if (res.data.success) {
-        message.success("Subscription activated successfully!");
+        // message.success("Subscription activated successfully!");
         // localStorage.setItem("subscription", true);
         setShowSuccess(true);
         setTimeout(() => router.push("/dashboard/buyer"), 1500);
       } else {
-        message.error(res.data.message || "Subscription failed.");
+        // message.error(res.data.message || "Subscription failed.");
       }
     } catch (err) {
       console.error(err);

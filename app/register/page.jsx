@@ -16,6 +16,7 @@ import {
   validateCaptcha,
 } from 'react-simple-captcha';
 import { registerUser } from '@/services/AuthServices/AuthApiFunction';
+import PublicRoute from '@/components/PublicRoute';
 
 // --- Yup Validation Schema ---
 const schema = yup.object().shape({
@@ -105,8 +106,14 @@ export default function RegisterPage() {
 
   const stateValue = watch('state');
 
-  useEffect(() => {
-    loadCaptchaEnginge(6);
+ useEffect(() => {
+    // Wait for DOM to mount before loading captcha
+    if (typeof window !== 'undefined') {
+      // give a tiny delay so canvas is rendered first
+      setTimeout(() => {
+        loadCaptchaEnginge(6); // 6 chars captcha
+      }, 500);
+    }
   }, []);
 
   useEffect(() => {
@@ -191,6 +198,7 @@ export default function RegisterPage() {
   // };
 
   return (
+    <PublicRoute>
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
       {/* --- Left Section --- */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-6 sm:px-12 py-12">
@@ -392,6 +400,7 @@ export default function RegisterPage() {
         }
       `}</style>
     </div>
+    </PublicRoute>
   );
 }
 

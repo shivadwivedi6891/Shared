@@ -371,7 +371,7 @@ const onSubmit = async (formData) => {
 
                 <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
                   {uploadedFiles.panPhoto ? (
-                    <div className="flex items-center justify-center text-green-600">
+                    <div className="flex items-center justify-center text-yellow-600">
                       <CheckCircle className="h-5 w-5 mr-2" /> <span>PAN Uploaded</span>
                     </div>
                   ) : (
@@ -440,7 +440,7 @@ const onSubmit = async (formData) => {
 
                 <div className="mt-3 border-2 border-dashed rounded-lg p-4 text-center">
                   {uploadedFiles.aadharPhoto ? (
-                    <div className="flex items-center justify-center text-green-600">
+                    <div className="flex items-center justify-center text-yellow-600">
                       <CheckCircle className="h-5 w-5 mr-2" /> <span>Aadhar Uploaded</span>
                     </div>
                   ) : (
@@ -482,18 +482,9 @@ const onSubmit = async (formData) => {
             </div>
           )}
 
-          {/* {!(panStatus === 1 || aadharStatus === 1) && (
-            <div>
-              <label className="block mb-1 text-sm font-medium">Remark (optional)</label>
-              <textarea
-                {...register("remark")}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Any additional remarks"
-                rows={3}
-              />
-            </div>
-          )} */}
 
+
+     
           {!(panStatus === 1 && aadharStatus === 1) && (
             <button
               type="submit"

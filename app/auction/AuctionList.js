@@ -1,6 +1,9 @@
-// app/auction/page.jsx
-import AuctionListClient from "./AuctionListClient";
-import { getAuctionList } from "@/services/AuctionServices/AuctionApiFunction";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { PlusCircle, FileText, List } from 'lucide-react';
+import PlaceBidTableModal from "@/components/placebidtable";
+import { getAuctionList } from '@/services/AuctionServices/AuctionApiFunction';
 
 export const metadata = {
   title: "Live Car Auctions | AutoBid",

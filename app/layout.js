@@ -28,21 +28,20 @@ export default function RootLayout({ children }) {
 
 
   return (
-    <html lang="en"suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <head />
       <body className={inter.className}>
         <ThemeProvider>
           <AuthProvider>
             <Navbar />
-    
-               <div className="relative min-h-screen">
-                 <PageLoader />
-                    {children}
-                      </div>
-                   <Toaster position="top-center" reverseOrder={false} />
-                  <Footer />
-  
-               <KYCModal />
-             <PremiumModal />
+            <div className="relative min-h-screen">
+              <PageLoader />
+              {children}
+            </div>
+            <Toaster position="top-center" reverseOrder={false} />
+            <Footer />
+            <KYCModal />
+            <PremiumModal />
           </AuthProvider>
         </ThemeProvider>
       </body>

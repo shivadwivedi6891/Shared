@@ -7,6 +7,6 @@ import { AuctionEndpoints } from "./AuctionApiEndPoints";
 
 export const getAuctionList = (data) => {
  
-  return Get(AuctionEndpoints.getAuctionList, data); 
+  return Get(AuctionEndpoints.getAuctionList, false); 
   
 };

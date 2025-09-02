@@ -1,7 +1,7 @@
-export const metadata = {
-  title: "AutoBid | Commercial Vehicle Auctions",
-  description: "Find, bid, and win commercial vehicles in live auctions. Discover the best deals and participate easily on AutoBid.",
-};
+// export const metadata = {
+//   title: "AutoBid | Commercial Vehicle Auctions",
+//   description: "Find, bid, and win commercial vehicles in live auctions. Discover the best deals and participate easily on AutoBid.",
+// };
 
 'use client';
 

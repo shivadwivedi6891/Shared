@@ -309,7 +309,7 @@ export default function AuctionPage() {
                     }}
                     disabled={!isBidValid}
                     className={`flex-1 py-2 rounded-lg text-white ${isBidValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-300 cursor-not-allowed'}`}
-                  >  b
+                  >
                     Place Bid
                   </button>
                 </div>

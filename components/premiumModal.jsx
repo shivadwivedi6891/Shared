@@ -89,7 +89,7 @@ export default function PremiumModal() {
     } catch (error) {
       console.error("Error checking subscription:", error);
       setApiError("Unable to fetch KYC details. Please check your connection or try again.");
-      setOpen(false);
+      setOpen(true); // keep modal open on error
     } finally {
       setIsLoading(false);
     }

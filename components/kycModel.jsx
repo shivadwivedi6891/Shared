@@ -193,7 +193,7 @@ const onSubmit = async (formData) => {
         }
       } catch (error) {
         setApiError("Unable to fetch KYC details. Please check your connection or try again.");
-        setIsOpen(false);
+        setIsOpen(true); // keep modal open on error
       } finally {
         setIsLoading(false);
       }

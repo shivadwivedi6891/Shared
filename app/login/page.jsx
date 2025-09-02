@@ -338,16 +338,26 @@ export default function LoginPage() {
   // }, [user, token]);
 
 
+    useEffect(() => {
+    const canvas = document.getElementById("captcha");
+    if (canvas) {
+      loadCaptchaEnginge(6); // run only when captcha element exists
+    }
+  }, []);
+
+
    useEffect(() => {
     // Wait for DOM to mount before loading captcha
     if (typeof window !== 'undefined') {
       // give a tiny delay so canvas is rendered first
       setTimeout(() => {
         loadCaptchaEnginge(6); // 6 chars captcha
-      }, 1000);
+      }, 500);
     }
   }, []);
 
+
+   
   // Timer for resend OTP
   useEffect(() => {
     let countdown;

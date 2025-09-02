@@ -106,7 +106,15 @@ export default function RegisterPage() {
 
   const stateValue = watch('state');
 
+
  useEffect(() => {
+    const canvas = document.getElementById("captcha");
+    if (canvas) {
+      loadCaptchaEnginge(6); // run only when captcha element exists
+    }
+  }, []);
+
+    useEffect(() => {
     // Wait for DOM to mount before loading captcha
     if (typeof window !== 'undefined') {
       // give a tiny delay so canvas is rendered first

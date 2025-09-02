@@ -1,6 +1,8 @@
+"use client";
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import PrivateRoute from "./PrivateRoute";
+
 
 export default function PlaceBidTableModal({ vehicles = [], open, onClose, onPlaceBids }) {
   const [bids, setBids] = useState({});

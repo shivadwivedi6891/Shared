@@ -41,7 +41,7 @@ export default function CarBidModal({ car, onClose, initialTab = 'Gallery' }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-      {/* ✅ Show Terms Modal on top */}
+      {/*  Show Terms Modal on top */}
       {showTermsModal && (
         <TermsConditionModal onClose={() => setShowTermsModal(false)} />
       )}

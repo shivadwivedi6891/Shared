@@ -4,7 +4,9 @@ import { PlusCircle } from 'lucide-react';
 import PlaceBidTableModal from "@/components/placebidtable";
 import { getAuctionList } from '@/services/AuctionServices/AuctionApiFunction';
 
+// Main auction list component
 export default function AuctionList() {
+  // State for filters, auctions, pagination, loading, and bid modal
   const [filters, setFilters] = useState({ state: '', brand: '', category: '' });
   const [auctions, setAuctions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);

@@ -6,10 +6,9 @@ import { useAuth } from '@/context/AuthContext';
 import CarBidModal from '@/components/carbidmodal';
 import TermsConditionModal from '@/components/termsconditionModal';
 import Link from 'next/link';
-import { getVehicleDetailsByAuctionId } from '@/services/AuctionServices/AuctionApiFunction';
 
 // API URL
-
+const API_URL = "https://carauctionadmin.ezulix.com/api/buyer/auctions/getAuctionedVehiclesByAuctionId/10";
 
 const states = ['All', 'Delhi', 'Tamil Nadu', 'Bihar'];
 const brands = ['All', 'BMW', 'Mercedes', 'Harley'];
@@ -36,7 +35,7 @@ export default function AuctionPage() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await getVehicleDetailsByAuctionId(10);
+        const response = await fetch(API_URL);
         const data = await response.json();
         if (data?.data) {
           setVehiclesData(data.data); // assuming response structure: { data: [...] }

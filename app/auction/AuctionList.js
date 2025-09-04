@@ -189,7 +189,7 @@ export default function AuctionList() {
               <a href="/dashboard/buyer" className="flex items-center gap-2 hover:text-purple-500 hover:underline">
                 <span className="text-xl">📋</span> My Bid List
               </a>
-              <a href="/auctionlist" className="flex items-center gap-2 hover:text-purple-500 hover:underline">
+              <a href={`/auctionlist/${auction.id}`} className="flex items-center gap-2 hover:text-purple-500 hover:underline">
                 <span className="text-xl">📄</span> View Vehicle List
               </a>
             </div>

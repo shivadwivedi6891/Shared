@@ -11,6 +11,6 @@ export const getAuctionList = (data) => {
   
 };
 
-export const getVehicleDetailsByAuctionId = (data) =>{
-  return Get(AuctionEndpoints. getVehicleDetails, false)
-}
+export const getVehicleDetailsByAuctionId = (auctionId) => {
+  return Get(`${AuctionEndpoints.getVehicleDetails}/${auctionId}`, false);
+};

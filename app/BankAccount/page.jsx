@@ -1,3 +1,7 @@
+// BankAccount/page.jsx
+// This page handles the subscription payment and plan selection for users.
+// It displays dealer bank details, a subscription form, and manages payment proof upload and validation.
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,9 +11,13 @@ import { message } from "antd";
 import { UploadCloud } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
+// Main subscription page component
 export default function SubscriptionPage() {
+  // Router and auth context
   const router = useRouter();
   const { subscriptionApproved ,subscriptionPending } = useAuth();
+
+  // State for subscription plans, form fields, errors, loading, and success modal
   const [plans, setPlans] = useState([]);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [reference, setReference] = useState("");
@@ -18,6 +26,7 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Redirect if subscription is approved or pending
   useEffect(() => {
     if (subscriptionApproved) {
       router.replace("/dashboard/buyer");
@@ -28,10 +37,10 @@ export default function SubscriptionPage() {
   useEffect(() => {
     if (subscriptionPending)  {
       router.replace("/dashboard/buyer");
-      // console.log("Subscription is pending, redirecting to dashboard.");
     }
   }, [subscriptionPending, router]);
 
+  // Fetch available subscription plans on mount
   useEffect(() => {
     getSubscriptionDetails()
       .then((res) => {
@@ -44,12 +53,14 @@ export default function SubscriptionPage() {
       });
   }, []);
 
+  // Handle payment proof file change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setProof(file);
     setErrors((prev) => ({ ...prev, proof: null }));
   };
 
+  // Validate subscription form fields
   const validateForm = () => {
     const newErrors = {};
     if (!selectedPlanId) newErrors.plan = "Please select a subscription plan.";
@@ -60,6 +71,7 @@ export default function SubscriptionPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle subscription form submit
   const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -74,12 +86,8 @@ export default function SubscriptionPage() {
 
       const res = await subscribePlan(body);
       if (res.data.success) {
-        // message.success("Subscription activated successfully!");
-        // localStorage.setItem("subscription", true);
         setShowSuccess(true);
         setTimeout(() => router.push("/dashboard/buyer"), 1500);
-      } else {
-        // message.error(res.data.message || "Subscription failed.");
       }
     } catch (err) {
       console.error(err);
@@ -89,6 +97,7 @@ export default function SubscriptionPage() {
     }
   };
 
+  // Hide page if subscription is approved
   if (subscriptionApproved && subscriptionPending) {
     return null;
   }

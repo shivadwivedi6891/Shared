@@ -1,3 +1,6 @@
+// This file contains hardcoded data for vehicles used in auctions, including details like price, location, bids, and images.
+// Used for demo, mock, or static data in the app.
+
 export const dummyCars = [
   {
     id: 1,

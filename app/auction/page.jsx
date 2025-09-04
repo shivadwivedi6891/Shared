@@ -12,5 +12,6 @@ export const metadata = {
 export default function AuctionPage() {
   return (
     <AuctionList/>
+    
   );
 }

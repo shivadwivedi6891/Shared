@@ -3,7 +3,7 @@
 
 "use client";
 import React, { createContext, useState, useContext, useEffect } from "react";
-import {jwtDecode} from "jwt-decode"; // npm install jwt-decode
+import { jwtDecode } from "jwt-decode"; // npm install jwt-decode
 import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
@@ -109,18 +109,18 @@ export const AuthProvider = ({ children }) => {
       Number(kyc.aadhaarStatus) === 2 &&
       Number(kyc.panStatus) === 2;
 
-  const isSubscriptionApproved = subscription && subscription.status === "Approved";
-  const isSubscriptionPending = subscription && subscription.status === "Pending";
+    const isSubscriptionApproved = subscription && subscription.status === "Approved";
+    const isSubscriptionPending = subscription && subscription.status === "Pending";
 
-  // Update state
-  setUser(user);
-  setToken(token);
-  setKyc(isKycComplete);
-  setSubscription(subscription || null);
-  setSubscriptionApproved(isSubscriptionApproved);
-  setSubscriptionPending(isSubscriptionPending);
+    // Update state
+    setUser(user);
+    setToken(token);
+    setKyc(isKycComplete);
+    setSubscription(subscription || null);
+    setSubscriptionApproved(isSubscriptionApproved);
+    setSubscriptionPending(isSubscriptionPending);
 
-    
+
 
     // Store in localStorage
     localStorage.setItem("user", JSON.stringify(user));
@@ -137,19 +137,19 @@ export const AuthProvider = ({ children }) => {
       try {
         const Cookies = require('js-cookie');
         Cookies.remove("token", { path: "/" });
-      } catch (e) {}
+      } catch (e) { }
     }
-  setUser(null);
-  setToken(null);
-  setKyc(null);
-  setSubscription(null);
-  setSubscriptionApproved(false);
+    setUser(null);
+    setToken(null);
+    setKyc(null);
+    setSubscription(null);
+    setSubscriptionApproved(false);
 
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("kyc");
-  localStorage.removeItem("subscription");
-  localStorage.removeItem("subscriptionApproved");
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("kyc");
+    localStorage.removeItem("subscription");
+    localStorage.removeItem("subscriptionApproved");
   };
 
   return (

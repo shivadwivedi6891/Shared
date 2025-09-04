@@ -1,13 +1,13 @@
-// export const metadata = {
-//   title: "AutoBid | Commercial Vehicle Auctions",
-//   description: "Find, bid, and win commercial vehicles in live auctions. Discover the best deals and participate easily on AutoBid.",
-// };
+// page.jsx
+// This is the main homepage for AutoBid, displaying featured car images and navigation.
+// It provides a carousel of car images and main entry point for users.
 
 'use client';
 
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
+// Array of featured car images for homepage carousel
 const carImages = [
   'https://news.dupontregistry.com/wp-content/uploads/2022/09/2022-bmw-m5-cs-1.jpg',
   'https://news.dupontregistry.com/wp-content/uploads/2025/06/download-2025-06-02T120740.838-1140x570.jpeg',
@@ -15,13 +15,17 @@ const carImages = [
   'https://news.dupontregistry.com/wp-content/uploads/2025/07/JC25_r0045-2018-Bugatti-Chiron-Carbon_001-1140x570.jpg',
 ];
 
+// Main homepage component
 export default function HomePage() {
+  // State for carousel index
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Function to go to the previous slide
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? carImages.length - 1 : prev - 1));
   };
 
+  // Function to go to the next slide
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev === carImages.length - 1 ? 0 : prev + 1));
   };

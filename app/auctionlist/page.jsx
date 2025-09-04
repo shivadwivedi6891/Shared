@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,6 +7,7 @@ import CarBidModal from '@/components/carbidmodal';
 import TermsConditionModal from '@/components/termsconditionModal';
 import Link from 'next/link';
 
+// Sample vehicle data
 const vehiclesData = [
   {
     id: 1,
@@ -94,6 +94,7 @@ const states = ['All', 'Delhi', 'Tamil Nadu', 'Bihar'];
 const brands = ['All', 'BMW', 'Mercedes', 'harley'];
 const categories = ['All', 'Two Wheeler', 'Car', 'Lot'];
 
+// Main auction list page component
 export default function AuctionPage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -107,6 +108,7 @@ export default function AuctionPage() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [bidVehicle, setBidVehicle] = useState(null);
 
+  // Function to determine minimum bid increment based on vehicle category
   const getMinIncrement = (category) => {
     if (category === 'Two Wheeler') return 2000;
     if (category === 'Car') return 5000;
@@ -114,15 +116,18 @@ export default function AuctionPage() {
     return 1000;
   };
 
+  // Function to validate if a bid is valid based on amount, starting bid, and increment
   const isValidBid = (amount, startingBid, increment) => {
     return amount > startingBid && (amount - startingBid) % increment === 0;
   };
 
+  // Function to open the confirmation modal for placing a bid
   const openConfirmModal = (vehicle) => {
     setBidVehicle(vehicle);
     setConfirmModalOpen(true);
   };
 
+  // Function to confirm and place the bid
   const confirmPlaceBid = () => {
     if (bidVehicle) {
       alert(` Bid placed on ${bidVehicle.name} for ₹${bids[bidVehicle.id]?.amount}`);
@@ -131,6 +136,7 @@ export default function AuctionPage() {
     }
   };
 
+  // Filter vehicles based on selected filters (state, brand, category)
   const filteredVehicles = vehiclesData.filter(vehicle =>
     (filters.state === 'All' || vehicle.state === filters.state) &&
     (filters.brand === 'All' || vehicle.brand === filters.brand) &&

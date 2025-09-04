@@ -1,3 +1,6 @@
+// AuctionList.js
+// This component displays the list of live auctions, filter options, and bid modal.
+// It manages auction data fetching, filtering, pagination, and bid placement UI.
 
 'use client';
 
@@ -6,16 +9,16 @@ import { PlusCircle, FileText, List } from 'lucide-react';
 import PlaceBidTableModal from "@/components/placebidtable";
 import { getAuctionList } from '@/services/AuctionServices/AuctionApiFunction';
 
+// Main auction list component
 export default function AuctionList() {
+  // State for filters, auctions, pagination, loading, and bid modal
   const [filters, setFilters] = useState({ state: '', brand: '', category: '' });
   const [auctions, setAuctions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-
   const [showBidModal, setShowBidModal] = useState(false);
   const [selectedAuction, setSelectedAuction] = useState(null);
-
   const auctionsPerPage = 4;
 
   // Filter options

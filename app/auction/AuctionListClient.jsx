@@ -9,6 +9,8 @@ const brands = ["BMW", "Mercedes"];
 const categories = ["Car", "Bike/2 Wheelers"];
 
 export default function AuctionListClient({ initialAuctions, initialTotalPages }) {
+  // Responsive sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filters, setFilters] = useState({ state: "", brand: "", category: "" });
   const [auctions, setAuctions] = useState(initialAuctions || []);
   const [totalPages, setTotalPages] = useState(initialTotalPages || 1);
@@ -59,59 +61,89 @@ export default function AuctionListClient({ initialAuctions, initialTotalPages }
     setFilters({ state: "", brand: "", category: "" });
   };
 
+  // Sidebar open/close for mobile
+  const openSidebar = () => setSidebarOpen(true);
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
-    <div className="flex flex-col lg:flex-row bg-white min-h-screen text-black">
-      {/* Sidebar Filter */}
-      <aside className="w-full lg:w-1/4 bg-white p-5 border-b lg:border-b-0 lg:border-r border-gray-300 sticky top-0 h-fit">
-        <h2 className="text-2xl font-bold mb-4">Filter By</h2>
-        <button
-          onClick={resetFilters}
-          className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 w-full mb-6"
+    <div className="flex flex-col lg:flex-row bg-white min-h-screen text-black relative">
+      {/* Mobile Filter Button */}
+      <button
+        className="lg:hidden fixed top-4 left-4 z-30 bg-blue-600 text-white px-4 py-2 rounded shadow-md"
+        onClick={openSidebar}
+        aria-label="Open filters"
+      >
+        Filter
+      </button>
+
+      {/* Sidebar Filter - Drawer on mobile */}
+      <aside
+        className={`fixed inset-0 z-40 bg-black bg-opacity-40 transition-opacity duration-300 lg:static lg:z-auto lg:bg-transparent ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} lg:opacity-100 lg:pointer-events-auto`}
+        aria-hidden={!sidebarOpen && window.innerWidth < 1024}
+      >
+        <div
+          className={`w-4/5 max-w-xs h-full bg-white p-5 border-r border-gray-300 shadow-lg transform transition-transform duration-300 lg:w-full lg:max-w-none lg:static lg:shadow-none lg:border-b-0 lg:border-r lg:h-fit ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
         >
-          Reset
-        </button>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">State</label>
-          <select
-            value={filters.state}
-            onChange={(e) => handleFilterChange("state", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
+          <div className="flex justify-between items-center mb-4 lg:mb-0">
+            <h2 className="text-2xl font-bold">Filter By</h2>
+            <button
+              className="lg:hidden text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              onClick={closeSidebar}
+              aria-label="Close filters"
+            >
+              &times;
+            </button>
+          </div>
+          <button
+            onClick={resetFilters}
+            className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 w-full mb-6"
           >
-            <option value="">All</option>
-            {states.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Brand</label>
-          <select
-            value={filters.brand}
-            onChange={(e) => handleFilterChange("brand", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
-          >
-            <option value="">All</option>
-            {brands.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Category</label>
-          <select
-            value={filters.category}
-            onChange={(e) => handleFilterChange("category", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
-          >
-            <option value="">All</option>
-            {categories.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
+            Reset
+          </button>
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">State</label>
+            <select
+              value={filters.state}
+              onChange={(e) => handleFilterChange("state", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
+            >
+              <option value="">All</option>
+              {states.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Brand</label>
+            <select
+              value={filters.brand}
+              onChange={(e) => handleFilterChange("brand", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
+            >
+              <option value="">All</option>
+              {brands.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">Category</label>
+            <select
+              value={filters.category}
+              onChange={(e) => handleFilterChange("category", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
+            >
+              <option value="">All</option>
+              {categories.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </aside>
+
       {/* Main Content */}
-      <main className="w-full lg:w-3/4 p-2 sm:p-4">
+      <main className="w-full lg:w-3/4 p-2 sm:p-4 pt-16 lg:pt-4">
         <h1 className="text-2xl font-bold mb-6">Live Auction List</h1>
         {loading ? (
           <p className="text-center text-gray-600 mt-10">Loading auctions...</p>

@@ -59,13 +59,7 @@ export default function LoginPage() {
   const phone = watch('phone');
   const captchaInput = watch('captcha');
 
-  // ✅ Run only after mount
-  // useEffect(() => {
-  //   setMounted(true);
-  //   if (!user && !token) {
-  //     loadCaptchaEnginge(6);
-  //   }
-  // }, [user, token]);
+ 
 
 
     useEffect(() => {

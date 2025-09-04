@@ -15,7 +15,7 @@ export default function AuctionList() {
   const [showBidModal, setShowBidModal] = useState(false);
   const [selectedAuction, setSelectedAuction] = useState(null);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
-
+    const [totalVehiclesCounts, setTotalVehiclesCounts] = useState(0);
   const auctionsPerPage = 4;
 
   // Filter options
@@ -36,10 +36,16 @@ export default function AuctionList() {
       };
       const res = await getAuctionList(payload);
       if (res.data.success) {
-        setAuctions(res.data.data.result.items || []);
+        const auctionItems = res.data.data.result.items || [];
+        const totalVehicles = auctionItems.reduce((sum, auction) => sum + (auction.totalVehiclesCounts || 0), 0);
+        setAuctions(auctionItems);
+        setTotalVehiclesCounts(totalVehicles);
+        console.log("Total Vehicles:", totalVehicles);
+        console.log("Auctions:", auctionItems);
         setTotalPages(res.data.data.result.numberOfPages || 1);
       } else {
         setAuctions([]);
+        setTotalVehiclesCounts(0);
         setTotalPages(1);
       }
     } catch (error) {
@@ -149,7 +155,7 @@ export default function AuctionList() {
               <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-4 p-2 sm:p-4">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
                 <img
-                  src={auction.imageUrl || "https://tse1.mm.bing.net/th/id/OIP.X42b4q5g88ldlViDnsLj9QHaEK?pid=Api&P=0&h=180"}
+                  src={auction.imagesJson || "https://tse1.mm.bing.net/th/id/OIP.X42b4q5g88ldlViDnsLj9QHaEK?pid=Api&P=0&h=180"}
                   alt={auction.name}
                   className="w-full sm:w-36 h-36 sm:h-24 object-cover rounded border border-gray-300"
                 />
@@ -189,7 +195,7 @@ export default function AuctionList() {
             </div>
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 sm:px-20 py-2 sm:py-3 flex flex-col sm:flex-row justify-between text-xs sm:text-sm font-medium text-center">
               <div className="mb-2 sm:mb-0">
-                <p className="text-base sm:text-lg font-semibold">{'-'}</p>
+                <p className="text-base sm:text-lg font-semibold">{auction.totalVehiclesCounts}</p>
                 <p>Total Vehicles</p>
               </div>
               <div>

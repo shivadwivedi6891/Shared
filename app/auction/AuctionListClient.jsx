@@ -101,7 +101,7 @@ export default function AuctionListClient({ initialAuctions, initialTotalPages }
           >
             Reset
           </button>
-          <div className="mb-4">
+          <div className="mb-4 ">
             <label className="block font-semibold mb-1">State</label>
             <select
               value={filters.state}

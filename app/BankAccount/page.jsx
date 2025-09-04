@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { getSubscriptionDetails, subscribePlan } from "@/services/AuthServices/AuthApiFunction";
 import { message } from "antd";
 import { UploadCloud } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SubscriptionPage() {
   const router = useRouter();
-
+  const { subscriptionApproved ,subscriptionPending } = useAuth();
   const [plans, setPlans] = useState([]);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [reference, setReference] = useState("");
@@ -16,6 +17,20 @@ export default function SubscriptionPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (subscriptionApproved) {
+      router.replace("/dashboard/buyer");
+    }
+  }, [subscriptionApproved, router]);
+
+
+  useEffect(() => {
+    if (subscriptionPending)  {
+      router.replace("/dashboard/buyer");
+      // console.log("Subscription is pending, redirecting to dashboard.");
+    }
+  }, [subscriptionPending, router]);
 
   useEffect(() => {
     getSubscriptionDetails()
@@ -73,6 +88,10 @@ export default function SubscriptionPage() {
       setLoading(false);
     }
   };
+
+  if (subscriptionApproved && subscriptionPending) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 p-6 flex flex-col items-center justify-center text-gray-900">

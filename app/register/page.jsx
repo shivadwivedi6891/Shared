@@ -108,27 +108,19 @@ export default function RegisterPage() {
 
 
  useEffect(() => {
-    const canvas = document.getElementById("captcha");
-    if (canvas) {
-      loadCaptchaEnginge(6); // run only when captcha element exists
-    }
-  }, []);
-
-    useEffect(() => {
-    // Wait for DOM to mount before loading captcha
     if (typeof window !== 'undefined') {
-      // give a tiny delay so canvas is rendered first
-      setTimeout(() => {
-        loadCaptchaEnginge(6); // 6 chars captcha
-      }, 500);
+      const canvas = document.getElementById('captcha');
+      if (canvas) {
+        loadCaptchaEnginge(6);
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      router.push('/dashboard/buyer');
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     router.push('/dashboard/buyer');
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     let timer;
@@ -206,7 +198,7 @@ export default function RegisterPage() {
   // };
 
   return (
-    <PublicRoute>
+    // <PublicRoute>
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
       {/* --- Left Section --- */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-6 sm:px-12 py-12">
@@ -408,7 +400,7 @@ export default function RegisterPage() {
         }
       `}</style>
     </div>
-    </PublicRoute>
+    // </PublicRoute>
   );
 }
 

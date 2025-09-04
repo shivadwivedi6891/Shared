@@ -1,130 +1,6 @@
 
 
 
-// 'use client';
-// import React, { createContext, useState, useContext, useEffect } from "react";
-// import { jwtDecode } from "jwt-decode";
-// import Cookies from "js-cookie";
-
-// export const AuthContext = createContext();
-
-// const isTokenExpired = (token) => {
-//   try {
-//     const decoded = jwtDecode(token);
-//     return decoded.exp * 1000 < Date.now(); // exp is in seconds
-//   } catch (e) {
-//     return true;
-//   }
-// };
-
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(null);
-//   const [token, setToken] = useState(null);
-//   const [kyc, setKyc] = useState(null);
-//   const [subscription, setSubscription] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   // Load from cookies on mount
-//   useEffect(() => {
-//     const storedToken = Cookies.get("token");
-//     const storedUser = Cookies.get("user");
-//     const storedKyc = Cookies.get("kyc");
-//     const storedSubscription = Cookies.get("subscription");
-
-//     if (storedToken && !isTokenExpired(storedToken)) {
-//       setToken(storedToken);
-//       setUser(storedUser ? JSON.parse(storedUser) : null);
-//       setKyc(storedKyc ? JSON.parse(storedKyc) : null);
-//       setSubscription(storedSubscription ? JSON.parse(storedSubscription) : null);
-//     } else {
-//       logout();
-//     }
-//     setLoading(false);
-//   }, []);
-
-//   const updateKyc = (newKyc) => {
-//     const isKycComplete =
-//       newKyc &&
-//       Number(newKyc.aadhaarStatus) === 1 &&
-//       Number(newKyc.panStatus) === 1;
-
-//     setKyc(isKycComplete);
-//     Cookies.set("kyc", JSON.stringify(isKycComplete), { expires: 7 });
-//     localStorage.setItem("kyc", JSON.stringify(isKycComplete));
-//   };
-
-//   const login = ({ user, token, kyc, subscription }) => {
-//     // validate KYC
-//     const isKycComplete =
-//       kyc &&
-//       Number(kyc.aadhaarStatus) === 2 &&
-//       Number(kyc.panStatus) === 2;
-
-//     const isSubscriptionActive = subscription && subscription.status === "Active";
-
-//     setUser(user);
-//     setToken(token);
-//     setKyc(isKycComplete);
-//     setSubscription(subscription || null);
-
-//     // Save to cookies (7 days)
-//     Cookies.set("token", token, { expires: 7 });
-//     Cookies.set("user", JSON.stringify(user), { expires: 7 });
-//     Cookies.set("kyc", JSON.stringify(isKycComplete), { expires: 7 });
-//     Cookies.set("subscription", JSON.stringify(subscription || null), { expires: 7 });
-
-//     // Also keep localStorage for backup (optional)
-//     localStorage.setItem("user", JSON.stringify(user));
-//     localStorage.setItem("token", token);
-//     localStorage.setItem("kyc", JSON.stringify(isKycComplete));
-//     localStorage.setItem("subscription", JSON.stringify(subscription || null));
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//     setToken(null);
-//     setKyc(null);
-//     setSubscription(null);
-
-//     Cookies.remove("token");
-//     Cookies.remove("user");
-//     Cookies.remove("kyc");
-//     Cookies.remove("subscription");
-
-//     localStorage.removeItem("user");
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("kyc");
-//     localStorage.removeItem("subscription");
-//   };
-
-//   return (
-//     <AuthContext.Provider
-//       value={{
-//         user,
-//         token,
-//         kyc,
-//         subscription,
-//         login,
-//         updateKyc,
-//         logout,
-//         loading,
-//         setLoading,
-//       }}
-//     >
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const useAuth = () => {
-//   const context = useContext(AuthContext);
-//   if (!context) throw new Error("useAuth must be used within an AuthProvider");
-//   return context;
-// };
-
-
-
-
 "use client";
 import React, { createContext, useState, useContext, useEffect } from "react";
 import {jwtDecode} from "jwt-decode"; // npm install jwt-decode
@@ -176,6 +52,27 @@ export const AuthProvider = ({ children }) => {
     }
     return null;
   });
+  const [subscriptionApproved, setSubscriptionApproved] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedSubscription = localStorage.getItem("subscription");
+      if (storedSubscription) {
+        const sub = JSON.parse(storedSubscription);
+        return sub && sub.status === "Approved";
+      }
+    }
+    return false;
+  });
+
+  const [subscriptionPending, setSubscriptionPending] = useState(() => {
+    if (typeof window !== "undefined") {
+      const storedSubscription = localStorage.getItem("subscription");
+      if (storedSubscription) {
+        const sub = JSON.parse(storedSubscription);
+        return sub && sub.status === "Pending";
+      }
+    }
+    return false;
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -212,13 +109,18 @@ export const AuthProvider = ({ children }) => {
       Number(kyc.aadhaarStatus) === 2 &&
       Number(kyc.panStatus) === 2;
 
-      const isSubscriptionActive = subscription && subscription.status === "Active";
+  const isSubscriptionApproved = subscription && subscription.status === "Approved";
+  const isSubscriptionPending = subscription && subscription.status === "Pending";
 
-    // Update state
-    setUser(user);
-    setToken(token);
-    setKyc(isKycComplete);
-    setSubscription(subscription || null);
+  // Update state
+  setUser(user);
+  setToken(token);
+  setKyc(isKycComplete);
+  setSubscription(subscription || null);
+  setSubscriptionApproved(isSubscriptionApproved);
+  setSubscriptionPending(isSubscriptionPending);
+
+    
 
     // Store in localStorage
     localStorage.setItem("user", JSON.stringify(user));
@@ -226,18 +128,28 @@ export const AuthProvider = ({ children }) => {
     //  Cookies.set("token", res.token, { expires: 7 });
     localStorage.setItem("kyc", JSON.stringify(isKycComplete));
     localStorage.setItem("subscription", JSON.stringify(subscription || null));
+    localStorage.setItem("subscriptionApproved", isSubscriptionApproved);
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
-    setKyc(null);
-    setSubscription(null);
+    // Clear token cookie globally on logout
+    if (typeof window !== "undefined") {
+      try {
+        const Cookies = require('js-cookie');
+        Cookies.remove("token", { path: "/" });
+      } catch (e) {}
+    }
+  setUser(null);
+  setToken(null);
+  setKyc(null);
+  setSubscription(null);
+  setSubscriptionApproved(false);
 
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("kyc");
-    localStorage.removeItem("subscription");
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  localStorage.removeItem("kyc");
+  localStorage.removeItem("subscription");
+  localStorage.removeItem("subscriptionApproved");
   };
 
   return (
@@ -247,12 +159,13 @@ export const AuthProvider = ({ children }) => {
         token,
         kyc,
         subscription,
+        subscriptionApproved,
+        subscriptionPending,
         login,
         updateKyc,
         logout,
         loading,
         setLoading,
-      
       }}
     >
       {children}

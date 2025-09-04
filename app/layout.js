@@ -14,9 +14,7 @@ import Footer from '@/components/footer';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import ThemeProvider from '../context/ThemeProvider';
 import Navbar from '@/components/navbar';
-import KYCModal from '@/components/kycModel';
-import { getUserKyc } from '@/services/AuthServices/AuthApiFunction';
-import PremiumModal from '@/components/premiumModal';
+import UserVerificationModal from '@/components/UserVerificationModal';
 import PageLoader from '@/components/loader';
 
 
@@ -40,8 +38,7 @@ export default function RootLayout({ children }) {
             </div>
             <Toaster position="top-center" reverseOrder={false} />
             <Footer />
-            <KYCModal />
-            <PremiumModal />
+            <UserVerificationModal />
           </AuthProvider>
         </ThemeProvider>
       </body>

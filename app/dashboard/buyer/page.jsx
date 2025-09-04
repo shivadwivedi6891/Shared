@@ -8,8 +8,8 @@ import PrivateRoute from '@/components/PrivateRoute';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-import KYCModal from '@/components/kycModel';
-import PremiumModal from '@/components/premiumModal';
+// import KYCModal from '@/components/kycModel';
+// import PremiumModal from '@/components/premiumModal';
 
 export default function BuyerDashboard() {
 

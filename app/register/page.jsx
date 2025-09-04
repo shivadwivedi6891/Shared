@@ -107,12 +107,23 @@ export default function RegisterPage() {
   const stateValue = watch('state');
 
 
- useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const canvas = document.getElementById('captcha');
       if (canvas) {
         loadCaptchaEnginge(6);
       }
+    }
+  }, []);
+
+
+   useEffect(() => {
+    // Wait for DOM to mount before loading captcha
+    if (typeof window !== 'undefined') {
+      // give a tiny delay so canvas is rendered first
+      setTimeout(() => {
+        loadCaptchaEnginge(6); // 6 chars captcha
+      }, 500);
     }
   }, []);
 
@@ -122,15 +133,7 @@ export default function RegisterPage() {
   //   }
   // }, [user]);
 
-  useEffect(() => {
-    let timer;
-    if (resendTimer > 0) {
-      timer = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [resendTimer]);
+
 
   useEffect(() => {
     if (stateValue) {
@@ -162,7 +165,7 @@ export default function RegisterPage() {
       const res = await registerUser(payload);
 
       if (res.data.success) {
-        toast.success('Registration successful! OTP sent to your mobile.');
+        toast.success('Registration successful!.');
         setOtpSent(true);
 
         router.push('/login');
